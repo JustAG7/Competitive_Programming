@@ -27,8 +27,6 @@ int moveY[] = {1, -1, 0, 0};
 char moveC[] = {'R', 'L', 'D', 'U'};
 
 
-
-
 void indef(){
 	if(fopen("input.txt", "r")){
 		freopen("input.txt","r",stdin);
@@ -36,12 +34,29 @@ void indef(){
 	}
 }
 void solve(){
-	
+	int n,r,x1,x2;
+	cin >> n >> r >> x1 >> x2;
+	for(int i=0;i<n;i++){
+		int x;cin >> x;
+		if(x1 < x2){
+			if(x + r <= x1){
+				cout << "GOAL";
+				return;
+			} 
+		}
+		else{
+			if(x - r >= x1){
+				cout << "GOAL";
+				return;
+			}
+		}
+	}
+	cout << "NO GOAL";
 }
 int main(){
 	fast;
 	indef();
 	int tt=1;
-	cin >> tt;
+	// cin >> tt;
 	while(tt--) solve();
 }

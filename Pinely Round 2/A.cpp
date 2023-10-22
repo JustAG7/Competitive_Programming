@@ -16,7 +16,6 @@ using namespace std;
 #define dbgArr(a,index) for(int i=0;i<(index);i++) cerr << a[i] << ' ';
 #define dbgMat(a,n,m) for(int i=0;i<(n);i++) {for(int j=0;j<(m);j++) cerr << a[i][j] << ' '; cerr << nl;}
 #define dbg(x) cerr << (x) << ' ';
-#define donetest cout << "done\n";
 
 
 const int M = 1e9+7;
@@ -27,8 +26,6 @@ int moveY[] = {1, -1, 0, 0};
 char moveC[] = {'R', 'L', 'D', 'U'};
 
 
-
-
 void indef(){
 	if(fopen("input.txt", "r")){
 		freopen("input.txt","r",stdin);
@@ -36,7 +33,22 @@ void indef(){
 	}
 }
 void solve(){
-	
+	int n,a,q;
+	cin >> n >> a >> q;
+	string s;
+	cin >> s;
+	int cnt = 0, tmp = a;
+	for(int i=0;i<q;i++){
+		if(a >= n) return cout << "YES\n", void();
+		char x = s[i];
+		if(x == '+'){
+			a++;
+			cnt++;
+		}
+		else a--;
+		if(a >= n) return cout << "YES\n", void();
+	}
+	cout << (tmp + cnt >= n ? "MAYBE\n" : "NO\n");
 }
 int main(){
 	fast;

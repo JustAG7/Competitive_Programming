@@ -27,8 +27,6 @@ int moveY[] = {1, -1, 0, 0};
 char moveC[] = {'R', 'L', 'D', 'U'};
 
 
-
-
 void indef(){
 	if(fopen("input.txt", "r")){
 		freopen("input.txt","r",stdin);
@@ -36,12 +34,16 @@ void indef(){
 	}
 }
 void solve(){
-	
+	db n,x0,y0,a,b;
+	cin >> n >> x0 >> y0 >> a >> b;
+	cout << fixed << setprecision(10) << n * sqrt(a*a + b*b) / 2 ;
+
+
 }
 int main(){
 	fast;
 	indef();
 	int tt=1;
-	cin >> tt;
+	// cin >> tt;
 	while(tt--) solve();
 }

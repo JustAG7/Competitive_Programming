@@ -11,63 +11,42 @@ using namespace std;
 #define nl '\n'
 
 const ll M=1e9+7;
+const int N = 305;
 void indef(){
 	#ifndef ONLINE_JUDGE
 		freopen("input.txt","r",stdin);
 		freopen("output.txt","w",stdout);
 	#endif
 }
-//*******************************
-//*                             *
-//*                             *
-//*   tt=1 neu ko co truy van   *
-//*                             *
-//*                             *
-//*******************************
+
+bool dp[N][N][N];
+bool vis[N][N][N];
+string s;
+bool calc(int l,int r,int k1,int k2,int turn){
+	if(vis[l][r][k1]){
+		return dp[l][r][k1];
+	}
+	if(k1 == 0) return true;
+	if(k2 == 0) return false;
+
+	vis[l][r][k1] = true;
+	if(!turn){
+		if(!calc(l + 1, r, k1 - (s[l] == 'B'), k2, 1)) return dp[l][r][k1] = false;
+		if(!calc(l, r - 1, k1 - (s[r] == 'B'), k2, 1)) return dp[l][r][k1] = false;		
+		return dp[l][r][k1] = true;
+	}
+	else{
+		if(calc(l + 1, r, k1 , k2 - (s[l] == 'B'), 0)) return dp[l][r][k1] =  true;
+		if(calc(l, r - 1, k1 , k2 - (s[r] == 'B'), 0)) return dp[l][r][k1] = true;		
+		return dp[l][r][k1] = false;
+	}
+}
 void solve(){
 	int n,k;
 	cin >> n >> k;
-	string s;
 	cin >> s;
-	s=s+"#";
-	int a=0,b=0,cnt=1;
-	vector<int> rs;
-	if(s[0]=='B') rs.pb(0);
-	for(int i=1;i<n;i++){
-		if(s[i]==s[i-1]) cnt++;
-		else{
-			rs.pb(cnt);
-			cnt=1;
-		}
-	}
-	rs.pb(cnt);
-	for(auto &x : rs) cout << x << ' ';
-	int i=0,j=rs.size()-1,qt=0;
-	while(i<=j){
-		if(a==k){
-			cout << "NO";
-			return;
-		}
-		if(b==k){
-			cout << "YES";
-			return;
-		}
-		if(s[i]=='W'){
-			qt=(qt+1)%2;
-			i++;
-		}
-		if(s[j]=='W'){
-			qt=(qt+1)%2;
-			j--;		
-		}
-		else{
-			if(cnt&1) a++;
-			else b++;
-			if(s[i+1]=='B')i++;
-			else j--;
-		}
-		cnt++;
-	}
+	
+	cout << (calc(0, n - 1, k, k, 0) ? "NO" : "YES") << nl;
 }
 int main(){
 	fast;
