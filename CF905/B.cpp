@@ -27,6 +27,8 @@ int moveY[] = {1, -1, 0, 0};
 char moveC[] = {'R', 'L', 'D', 'U'};
 
 
+
+
 void indef(){
 	if(fopen("input.txt", "r")){
 		freopen("input.txt","r",stdin);
@@ -34,7 +36,29 @@ void indef(){
 	}
 }
 void solve(){
+	int n,k;
+	cin >> n >> k;
+	vector<int> a(n);
 	
+	for(int i=0;i<n;i++) cin >> a[i];
+	if(k == 4){
+		int cnt2 = 0;
+		int ans = 2;
+		for(int i=0;i<n;i++){
+			if(a[i] % 4 == 0) return cout << "0\n", void();
+			if(a[i] % 2 == 0) cnt2++;
+			else ans = min(ans, k - a[i]%k);
+		}
+		cout << min(ans, max(0,2 - cnt2)) << nl;
+	}
+	else{
+		int ans = k;
+		for(int i=0;i<n;i++){
+			if(a[i] % k == 0) return cout << "0\n", void();
+			else ans = min(ans, k - a[i]%k);
+		}
+		cout << ans << nl;
+	}
 }
 int main(){
 	fast;

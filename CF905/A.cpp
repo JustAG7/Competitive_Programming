@@ -27,6 +27,8 @@ int moveY[] = {1, -1, 0, 0};
 char moveC[] = {'R', 'L', 'D', 'U'};
 
 
+
+
 void indef(){
 	if(fopen("input.txt", "r")){
 		freopen("input.txt","r",stdin);
@@ -34,7 +36,22 @@ void indef(){
 	}
 }
 void solve(){
-	
+	int n,k;
+	cin >> n >> k;
+	string s;
+	cin >> s;
+	if(n == 1 || k + 1 == n) return cout << "YES\n", void();
+	map<char,int> mp;
+	for(int i=0;i<n;i++){
+		mp[s[i]]++;
+	}
+	int cnt = 0;
+	for(auto [c,v] : mp){
+		cnt += (v % 2 != 0);
+	}
+	k -= cnt - 1;
+	if(k < 0) return cout << "NO\n", void();
+	cout << "YES\n";
 }
 int main(){
 	fast;

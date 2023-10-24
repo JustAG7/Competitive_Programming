@@ -27,6 +27,8 @@ int moveY[] = {1, -1, 0, 0};
 char moveC[] = {'R', 'L', 'D', 'U'};
 
 
+
+
 void indef(){
 	if(fopen("input.txt", "r")){
 		freopen("input.txt","r",stdin);
@@ -34,12 +36,23 @@ void indef(){
 	}
 }
 void solve(){
-	
+	int n;
+	cin >> n;
+	// if(n == 1) return cout << "Alice\n", void();
+	// vector<int> a(n);
+	int XOR = 0;
+	for(int i = 0 ; i < n ; i++){
+		int x;cin >> x;
+		if(x % 4 == 0) x--;
+		else if(x % 4 == 3) x++;
+		XOR ^= x;
+	}
+	cout << (XOR == 0 ? "Bob" : "Alice");
 }
 int main(){
 	fast;
 	indef();
 	int tt=1;
-	cin >> tt;
+	// cin >> tt;
 	while(tt--) solve();
 }
