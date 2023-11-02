@@ -29,12 +29,10 @@ ll dp[N][N];
 void solve(){
 	int n,m;
 	cin >> n >> m;
-	char c;cin >> c;
-	dp[1][1] = (c == '.');
-	for(int i=1;i<=n;i++){
+	dp[0][1] = 1;
+ 	for(int i=1;i<=n;i++){
 		for(int j=1;j<=m;j++){
-			if(i == j && i == 1) continue;
-			cin >> c;
+			char c; cin >> c;
 			dp[i][j] = ((c == '.')*(dp[i][j-1] + dp[i-1][j]))%M;
 		}
 	}

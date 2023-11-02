@@ -43,13 +43,13 @@ void dfs(int u,int pre){
 			countNode[u] += countNode[v];
 			low[u] = min(low[u],low[v]);
 			child++;
-			if(low[v] > num[u]) bridge++;
+			if(low[v] > num[u]) bridge++; // cau
 			if(u == pre){
-				if(child > 1) joint[u] = 1;
+				if(child > 1) joint[u] = 1; // khop
 				res[u].pb(countNode[v]);
 			}
 			else if(low[v] >= num[u]){
-				res[u].pb(countNode[v]);
+				res[u].pb(countNode[v]); // goc
 				joint[u] = 1;
 			}
 		}
