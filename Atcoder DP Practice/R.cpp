@@ -104,6 +104,7 @@ void solve(){
 	}
 	ll ans = 0;
 	Matrix res = mat.pow(k);
+	// cout << res;
 	for(int i=0;i<n;i++){
 		for(int j=0;j<n;j++){
 			(ans += res.data[i][j]) %= M;

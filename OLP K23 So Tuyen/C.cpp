@@ -45,11 +45,11 @@ void dfs(int u,int pre){
 			child++;
 			if(low[v] > num[u]) bridge++; // cau
 			if(u == pre){
-				if(child > 1) joint[u] = 1; // khop
+				if(child > 1) joint[u] = 1; // goc
 				res[u].pb(countNode[v]);
 			}
 			else if(low[v] >= num[u]){
-				res[u].pb(countNode[v]); // goc
+				res[u].pb(countNode[v]); // khop
 				joint[u] = 1;
 			}
 		}

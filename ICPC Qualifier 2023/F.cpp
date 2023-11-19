@@ -36,26 +36,54 @@ void indef(){
 	}
 }
 
-ii a[N];
-// int b[N];
-vi ans;
-void build(int x){
 
-}
-
-
-// int x = 0;
-void solve(){
-	int n;
-	cin >> n;
-	ll sum = 0, ans = 0;
-	for(int i=0;i<n;i++) cin >> a[i].X;
-	for(int i=0;i<n;i++) cin >> a[i].Y;
-
-
-	for(int i=0;i<n;i++){
-
+ll bit[N];
+int a[N],b[N], last[N];
+int par[N];
+int n;
+void update(int x,ll val,int ind){
+	for(;x<N;x += x & (-x)){
+		if(bit[x] < val){
+			bit[x] = val;
+			last[x] = ind;
+		}
 	}
+}
+pair<ll,int> query(int x){
+	ll ans = 0, pos = 0;
+	for(;x>0;x -= x & (-x)){
+		if(ans < bit[x]){
+			ans = bit[x];
+			pos = last[x];
+		}
+	}
+	return {ans, pos};
+}
+void solve(){
+	cin >> n;
+	ll sum = 0;int pos = 0;
+	ll tempSum; int tempPos;
+	for(int i=1;i<=n;i++) cin >> a[i];
+	for(int i=1;i<=n;i++) cin >> b[i];
+	for(int i=1;i<=n;i++){
+		auto [tempSum, tempPos] = query(a[i] - 1);
+		par[i] = tempPos;
+		if(sum < tempSum + b[i]){
+			sum = tempSum + b[i];
+			pos = i;
+		}
+		update(a[i], tempSum + b[i], i);
+	}
+	vi trace;
+    trace.pb(pos);
+    while (par[pos] != 0) {
+        pos = par[pos];
+        trace.pb(pos);
+    }
+    reverse(all(trace));
+    cout << trace.size() << nl;
+    for (int x : trace) cout << x << ' ';
+	// for(int i = 1; i <= n;i++) cout << trace[i] << ' ';
 }
 int main(){
 	fast;
