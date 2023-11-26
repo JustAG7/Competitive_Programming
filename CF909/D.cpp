@@ -13,8 +13,8 @@ using namespace std;
 #define ii pair<int,int>
 #define vi vector<int>
 #define vii vector<pair<int,int>>
-#define dbgArr(a,index) for(int i=0;i<(index);i++) cerr << a[i] << ' ';
-#define dbgMat(a,n,m) for(int i=0;i<(n);i++) {for(int j=0;j<(m);j++) cerr << a[i][j] << ' '; cerr << nl;}
+#define dbgArr(a,index) for(int i=0;i<(index);i++) cerr << x << ' ';
+#define dbgMat(a,n,m) for(int i=0;i<(n);i++) {for(int j=0;j<(m);j++) cerr << x[j] << ' '; cerr << nl;}
 #define dbg(x) cerr << (x) << ' ';
 #define donetest cout << "done\n";
 
@@ -39,15 +39,14 @@ void indef(){
 void solve(){
 	int n;
 	cin >> n;
-	vector<int> a(n);
 	ll ans = 0;
-	unordered_map<ll,ll> mp;
+	unordered_map<int,int> mp;
 	for(int i=0;i<n;i++){
-		cin >> a[i];
-		ans += mp[a[i]];
-		ans += (a[i] == 1)*(mp[2]);
-		ans += (a[i] == 2)*(mp[1]);
-		mp[a[i]]++;
+		int x; cin >> x;
+		ans += mp[x];
+		if(x == 1) ans += mp[2];
+		if(x == 2) ans += mp[1];
+		mp[x]++;
 	}
 	cout << ans << nl;
 }

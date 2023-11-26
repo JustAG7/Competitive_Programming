@@ -1,3 +1,5 @@
+<snippet>		
+	<content><![CDATA[
 #include<bits/stdc++.h>
 using namespace std;
 #define fast ios_base::sync_with_stdio(false);cout.tie(NULL);cin.tie(NULL);
@@ -20,19 +22,22 @@ using namespace std;
 
 
 const int M = 1e9+7;
-const int N = 1e5+5;
+const int N = 3e5+5;
+const ll inf = 1e18;
+const ll INF = 0x3f;
 
 int moveX[] = {0, 0, 1, -1};
 int moveY[] = {1, -1, 0, 0};
 char moveC[] = {'R', 'L', 'D', 'U'};
 
-
 void indef(){
-	if(fopen("input.txt", "r")){
-		freopen("input.txt","r",stdin);
-		freopen("output.txt","w",stdout);	
+	#define JA "input"
+	if(fopen(JA ".inp", "r")){
+		freopen(JA ".inp","r",stdin);
+		freopen(JA ".out","w",stdout);	
 	}
 }
+
 void solve(){
 	
 }
@@ -43,3 +48,9 @@ int main(){
 	cin >> tt;
 	while(tt--) solve();
 }
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>JustA</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.c++</scope>
+</snippet>

@@ -8,7 +8,7 @@ int main() {
     
     // Get the folder name from the user
     std::cout << "Enter folder name: ";
-    folderName = "CF909";
+    folderName = "CodeTON 7";
     // std::cin >> folderName;
 
     // Check if the folder already exists
@@ -23,8 +23,8 @@ int main() {
         std::cout << "Folder created successfully." << std::endl;
 
         // Create input.txt and output.txt files within the folder
-        std::ofstream inputFile(folderName + "/input.txt");
-        std::ofstream outputFile(folderName + "/output.txt");
+        std::ofstream inputFile(folderName + "/input.inp");
+        std::ofstream outputFile(folderName + "/input.out");
 
         if (inputFile.is_open() && outputFile.is_open()) {
             inputFile.close();

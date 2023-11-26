@@ -21,7 +21,7 @@ using namespace std;
 
 const int M = 1e9+7;
 const int N = 2e5+5;
-const int C = 500;
+const int C = 50;
 const ll inf = 1e18;
 const ll INF = 0x3f;
 
@@ -35,54 +35,80 @@ void indef(){
 		freopen("output.txt","w",stdout);	
 	}
 }
-struct BIT{
-	int n;
-	vector<ll> bit;
-	
-}
 ll a[N];
 int n;
-void update(int pos,ll val){
-	for(int i=1;i<=C;i++){
-		for(int x = pos; x <= n; x += x & (-x)){
-			bit[x][i] -= a[pos];
-			bit[x][i] += val;
+struct BIT{ // cay theo buoc nhay bit[k][i]: buoc nhay k, base index i
+	int size;
+	vector<vector<ll>> bit;
+	void init(int newSize){
+		size = newSize;
+		bit.resize(size + 2, vector<ll> (n / size + 2, 0));
+		for(int i=1;i<=n;i++){
+			update(i % size, i / size + (i % size != 0), a[i]);
 		}
 	}
-}
-ll query(int x,int k){
-	ll ans = 0;
-	for(; x > 0; x -= x & (-x)) ans += bit[x][k];
-	return ans;
-}
+
+	void update(int k,int u,int val){
+		for(; u <= n / size + (n % size != 0); u += u & (-u)){
+			bit[k % size][u] += val;
+		}
+	}
+	ll query(int u,int k){
+		ll ans = 0;
+		for(;u > 0; u -= u & (-u)){
+			ans += bit[k % size][u];
+		}
+		return ans;
+	}
+	ll getRange(int u,int k){
+		return query(n/size + (n % size != 0), k) - query(u - 1, k);
+	}
+	ll getSize(){
+		return size;
+	}
+	void print(){ //print the array after operations
+		for(int i=1;i<size;i++){
+			for(int j=1;j <= n / size;j++)
+				cout << bit[i][j] << ' ';
+			cout << nl;
+		}
+		for(int j=1;j <= n / size;j++)
+			cout << bit[0][j] << ' ';
+		cout << nl;
+	}
+};
+
 void solve(){
 	cin >> n;
-	for(int i=1;i<=n;i++){
-		cin >> a[i];
-		update(i, a[i]);
+	for(int i=1;i<=n;i++) cin >> a[i];
+	BIT bit[min(n, C) + 2];
+	for(int i=1;i<=min(n, C);i++){
+		bit[i].init(i);
+		// bit[i].print();
 	}
 	int q;
 	cin >> q;
 	while(q--){
-		int t;
-		cin >> t;
+		int t,u,v;
+		cin >> t >> u >> v;
 		if(t == 1){
-			int pos; ll val; cin >> pos >> val;
-			update(pos, val);
-			a[pos] = val;
+			for(int i=1;i<=min(n, C);i++){
+				bit[i].update(u, u/i + (u % i != 0), -a[u] + v);
+			}
+			a[u] = v;
 		}
 		else{
-			int pos, k; cin >> pos >> k;
-			if(k >= C){
+			if(v > C){ 	 	
 				ll ans = 0;
-				for(; pos <= n; pos += k) ans += a[pos];
+				for(;u <= n; u += v) ans += a[u];
 				cout << ans << nl;
 			}
-			else cout << query(pos, k) << nl;
-
+			else{
+				cout << bit[v].getRange(u/v + (u % v != 0), u) << nl;
+			}
 		}
 	}
-}
+} 
 int main(){
 	fast;
 	indef();
