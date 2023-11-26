@@ -39,6 +39,7 @@ void indef(){
 int a[N],b[N];
 int indA[N],indB[N];
 int cnt[N];
+multiset<int> ms;
 void solve(){
 	int n,q;
 	cin >> n >> q;
@@ -50,66 +51,54 @@ void solve(){
 		cin >> b[i];
 		indB[b[i]] = i;
 	}
-	int val = 0;
-	int ans = 0;
 	int tmp;
 	for(int i=1;i<=n;i++){
-		// cout << indA[a[i]] << ' ' << indB[a[i]] << nl;
 		if(indA[a[i]] <= indB[a[i]]) tmp = indB[a[i]] - indA[a[i]];
 		else tmp = indB[a[i]] + n - indA[a[i]];
-		
 		cnt[tmp]++;
-		if(cnt[tmp] > ans){
-			ans = cnt[tmp];
-			val = tmp;
-		}
 	}
+	for(int i=0;i<n;i++) ms.insert(cnt[i]);
 	while(q--){
 		int u,v;
 		cin >> u >> v;
 		int x,y;
 		x = b[u], y = b[v];
+		
+		//======{
 		if(indA[x] <= indB[x]) tmp = indB[x] - indA[x];
 		else tmp = indB[x] + n - indA[x];
-		
+		ms.erase(ms.find(cnt[tmp]));
 		cnt[tmp]--;
-		if(val == tmp) ans--;
-		if(cnt[tmp] > ans){
-			ans = cnt[tmp];
-			val = tmp;
-		}
-
+		ms.insert(cnt[tmp]);
 		if(indA[y] <= indB[y]) tmp = indB[y] - indA[y];
 		else tmp = indB[y] + n - indA[y];
 		
+		ms.erase(ms.find(cnt[tmp]));
 		cnt[tmp]--;
-		if(val == tmp) ans--;
-		if(cnt[tmp] > ans){
-			ans = cnt[tmp];
-			val = tmp;
-		}
+		ms.insert(cnt[tmp]);
+		//======}
 
 		swap(indB[x],indB[y]);
-		cout << x << ' ' << indB[x] << nl;
-		cout << y << ' ' << indB[y] << nl;
+		swap(b[u], b[v]);
+		
+		//======{
 		if(indA[x] <= indB[x]) tmp = indB[x] - indA[x];
 		else tmp = indB[x] + n - indA[x];
+
+		ms.erase(ms.find(cnt[tmp]));
 		cnt[tmp]++;
-		if(cnt[tmp] > ans){
-			ans = cnt[tmp];
-			val = tmp;
-		}
+		ms.insert(cnt[tmp]);
 
 		if(indA[y] <= indB[y]) tmp = indB[y] - indA[y];
 		else tmp = indB[y] + n - indA[y];
 		
+		ms.erase(ms.find(cnt[tmp]));
 		cnt[tmp]++;
-		if(val == tmp) ans++;
-		if(cnt[tmp] > ans){
-			ans = cnt[tmp];
-			val = tmp;
-		}
-		cout << ans << nl;
+		ms.insert(cnt[tmp]);
+		//======}
+
+		
+		cout << *ms.rbegin() << nl;
 	}	
 }
 int main(){
