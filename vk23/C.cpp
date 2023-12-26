@@ -44,6 +44,7 @@ void solve(){
 	sort(a,a + n);
 	for(int i=1;i<=n;i++) pref[i] = pref[i - 1] + a[i - 1];
 	while(q--){
+		// wi * wj + t * (wi + wj)
 		// (wi + t)(wj + t) - t^2
 		ll t;
 		cin >> t;

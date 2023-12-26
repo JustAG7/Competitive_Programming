@@ -116,9 +116,8 @@ void solve(){
 	bfs1(); //bfs for monster to get min distance to all '.'
 	clear();
 	bfs2(); // bfs for player to check which '.' the player can go
-			// but wont face the monsters each step the player do
-	// check the border if the player can get to any '.' border without being
-	// caught by the monsters, return the path
+			// but the monsters wont get there first
+	// check the border, if it's okay then return
 	rep(i,0,n){
 		if(vis[i][0]){
 			return getAns(i,0);

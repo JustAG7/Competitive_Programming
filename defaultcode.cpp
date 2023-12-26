@@ -1,5 +1,3 @@
-<snippet>		
-	<content><![CDATA[
 #include<bits/stdc++.h>
 using namespace std;
 #define fast ios_base::sync_with_stdio(false);cout.tie(NULL);cin.tie(NULL);
@@ -48,9 +46,3 @@ int main(){
 	cin >> tt;
 	while(tt--) solve();
 }
-]]></content>
-	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
-	<tabTrigger>JustA</tabTrigger>
-	<!-- Optional: Set a scope to limit where the snippet will trigger -->
-	<scope>source.c++</scope>
-</snippet>

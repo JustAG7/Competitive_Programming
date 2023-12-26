@@ -83,7 +83,7 @@ int main(){
 			if(tmp != 0) res[i].pb(tmp);
 			ll ans = 0;
 			ll sum = 0;
-			for(auto x : res[i]) sum+=x;
+			for(auto x : res[i]) sum += x;
 			for(auto x : res[i]){
 				sum -= x;
 				ans += x * sum;

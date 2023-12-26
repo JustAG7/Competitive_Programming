@@ -41,14 +41,20 @@ void solve(){
 	int n,k;
 	cin >> n >> k;
 	for(int i=1;i<=n;i++) cin >> a[i];
-	memset(dp,inf,sizeof(dp));
-	dp[0][0] = 0;
-	// dp[i][j] : tổng nhỏ nhất nếu chọn j cặp trong i người đầu tiên 
-	for(int i=1;i<=n;i++){
-		for(int j=2;j<=k;j++){
-			dp[i][j] = min(dp[i - 1][j - 1], dp[i - 1][j - 2] + a[i])
+	//dp[i][j] : tổng nhỏ nhất sao cho chọn j cặp, xét đến người thứ i
+	//Chọn tại i là cặp thì nhận lấy kq dp[i - 2][j - 1] (kq min trước đó)
+	sort(a + 1, a + 1 + n);
+	for(int i=0;i<=n;i++) for(int j=0;j<=k;j++) dp[i][j] = inf;
+	for(int i=0;i<=n;i++) dp[i][0] = 0;
+
+
+		
+	for(int i=2;i<=n;i++){
+		for(int j=1;j<=k;j++){
+			dp[i][j] = min(dp[i - 1][j], a[i] - a[i - 1] + dp[i - 2][j - 1]);
 		}
 	}
+	cout << dp[n][k];	
 }
 int main(){
 	fast;

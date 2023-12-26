@@ -53,8 +53,7 @@ void solve(){
 	}
 	int tmp;
 	for(int i=1;i<=n;i++){
-		if(indA[a[i]] <= indB[a[i]]) tmp = indB[a[i]] - indA[a[i]];
-		else tmp = indB[a[i]] + n - indA[a[i]];
+		tmp = (indB[a[i]] - indA[a[i]] + n) % n;
 		cnt[tmp]++;
 	}
 	for(int i=0;i<n;i++) ms.insert(cnt[i]);
@@ -63,16 +62,14 @@ void solve(){
 		cin >> u >> v;
 		int x,y;
 		x = b[u], y = b[v];
-		
+			
 		//======{
-		if(indA[x] <= indB[x]) tmp = indB[x] - indA[x];
-		else tmp = indB[x] + n - indA[x];
+		tmp = (indB[x] - indA[x] + n) % n;
 		ms.erase(ms.find(cnt[tmp]));
 		cnt[tmp]--;
 		ms.insert(cnt[tmp]);
-		if(indA[y] <= indB[y]) tmp = indB[y] - indA[y];
-		else tmp = indB[y] + n - indA[y];
-		
+
+		tmp = (indB[y] - indA[y] + n) % n;
 		ms.erase(ms.find(cnt[tmp]));
 		cnt[tmp]--;
 		ms.insert(cnt[tmp]);
@@ -82,22 +79,17 @@ void solve(){
 		swap(b[u], b[v]);
 		
 		//======{
-		if(indA[x] <= indB[x]) tmp = indB[x] - indA[x];
-		else tmp = indB[x] + n - indA[x];
-
+		tmp = (indB[x] - indA[x] + n) % n;
 		ms.erase(ms.find(cnt[tmp]));
 		cnt[tmp]++;
 		ms.insert(cnt[tmp]);
 
-		if(indA[y] <= indB[y]) tmp = indB[y] - indA[y];
-		else tmp = indB[y] + n - indA[y];
-		
+		tmp = (indB[y] - indA[y] + n) % n;
 		ms.erase(ms.find(cnt[tmp]));
 		cnt[tmp]++;
 		ms.insert(cnt[tmp]);
 		//======}
 
-		
 		cout << *ms.rbegin() << nl;
 	}	
 }

@@ -21,7 +21,8 @@ using namespace std;
 
 const int M = 1e9+7;
 const int N = 2e5+5;
-const int C = 50;
+const int C = 50; //several query 2 with low bound????
+				  // what if all q was 2 1 51????
 const ll inf = 1e18;
 const ll INF = 0x3f;
 

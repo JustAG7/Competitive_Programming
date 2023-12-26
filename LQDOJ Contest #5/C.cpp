@@ -50,7 +50,6 @@ void solve(){
 	ll tmp = log2(n);
 	ll sum = n*(n + 1)/2;
 	ll point = pm(2,tmp + 1) - 1;
-	// cout << sum << ' ' << point << nl;
 	cout << point - (sum - point) << nl;		
 }
 

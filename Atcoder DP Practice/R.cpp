@@ -67,6 +67,7 @@ struct Matrix{
 		while(n--) a[n][n] = 1;
 		return a;
 	}
+
 	Matrix operator * (const Matrix &b){
 		Matrix a = *this;
 
@@ -81,7 +82,6 @@ struct Matrix{
 		}
 		return c;
 	}
-
 	Matrix pow(ll exp){
 		assert(row() == col());
 
@@ -93,29 +93,37 @@ struct Matrix{
 	}
 };
 void solve(){
-	int n; ll k;
-	cin >> n >> k;
-	Matrix mat(n);
+	int n;
+	cin >> n;
+	Matrix a(n),b(n);
 	for(int i=0;i<n;i++){
 		for(int j=0;j<n;j++){
 			int x;cin >> x;
-			mat.data[i].pb(x);
+			a.data[i].pb(x);
+		}
+	}
+	for(int i=0;i<n;i++){
+		for(int j=0;j<n;j++){
+			int x;cin >> x;
+			b.data[i].pb(x);
 		}
 	}
 	ll ans = 0;
-	Matrix res = mat.pow(k);
+	Matrix res = a.pow(3);
 	// cout << res;
 	for(int i=0;i<n;i++){
 		for(int j=0;j<n;j++){
-			(ans += res.data[i][j]) %= M;
+			if(res.data[i][j] != b.data[i][j]){
+				return cout << "NO\n",void();
+			}
 		}
 	}
-	cout << ans;
+	cout << "YES\n";
 }
 signed main(){
 	fast;
 	indef();
 	int tt=1;
-	// cin >> tt;
+	cin >> tt;
 	while(tt--) solve();
 }
