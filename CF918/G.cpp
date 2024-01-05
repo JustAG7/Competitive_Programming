@@ -17,10 +17,11 @@ using namespace std;
 #define dbgMat(a,n,m) for(int i=0;i<(n);i++) {for(int j=0;j<(m);j++) cerr << a[i][j] << ' '; cerr << nl;}
 #define dbg(x) cerr << (x) << ' ';
 #define donetest cout << "done\n";
+#define tp tuple<ll,ll,ll>
 
 
 const int M = 1e9+7;
-const int N = 1e3+5;
+const int N = 3e5+5;
 const ll inf = 1e18;
 const ll INF = 0x3f;
 
@@ -35,29 +36,47 @@ void indef(){
 		freopen(JA ".out","w",stdout);	
 	}
 }
-ll dp[N][N];
-ll a[N];
-void solve(){
-	int n,k;
-	cin >> n >> k;
-	for(int i=1;i<=n;i++) cin >> a[i];
-	//dp[i][j] : tổng nhỏ nhất sao cho chọn j cặp, xét đến người thứ i
-	//Chọn tại i là cặp thì nhận lấy kq dp[i - 2][j - 1] (kq min trước đó)
-	sort(a + 1, a + 1 + n);
-	for(int i=0;i<=n;i++) for(int j=0;j<=k;j++) dp[i][j] = inf;
-	for(int i=0;i<=n;i++) dp[i][0] = 0;
 
-	for(int i=2;i<=n;i++){
-		for(int j=1;j<=k;j++){
-			dp[i][j] = min(dp[i - 1][j], a[i] - a[i - 1] + dp[i - 2][j - 1]);
+void solve(){
+	int n,m;
+	cin >> n >> m;
+	vector<vector<pair<int,ll>>> g(n + 1);
+	vector<ll> a(n + 1);
+	for(int i=0;i<m;i++){
+		int u,v,w;
+		cin >> u >> v >> w;
+		g[u].pb({v, w});
+		g[v].pb({u, w});
+	}
+	for(int i=1;i<=n;i++) cin >> a[i];
+	vector<vector<ll>> f(n + 1,vector<ll> (1005, inf));
+	vector<vector<int>> vis(n + 1,vector<int> (1005, 0));
+
+	priority_queue<tp, vector<tp>, greater<tp>> pq;
+	f[1][a[1]] = 0;
+	pq.push({0LL, 1LL, a[1]}); // value, vertex, bike
+	while(!pq.empty()){
+		auto [d, u, s] = pq.top();pq.pop();
+		if(vis[u][s] || f[u][s] == inf) continue;
+		vis[u][s] = 1;
+		for(auto [v, w] : g[u]){
+			ll newS = min(a[v], s);
+			if(f[v][newS] > f[u][s] + w * s){
+				f[v][newS] = f[u][s] + w * s;
+				pq.push({f[v][newS], v, newS});
+			}
 		}
 	}
-	cout << dp[n][k];	
+	ll ans = inf;
+	for(int i=1;i<=1000;i++){
+		ans = min(ans, f[n][i]);
+	}
+	cout << ans << nl;
 }
 int main(){
 	fast;
 	indef();
 	int tt=1;
-	// cin >> tt;
+	cin >> tt;
 	while(tt--) solve();
 }

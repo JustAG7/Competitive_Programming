@@ -20,7 +20,7 @@ using namespace std;
 
 
 const int M = 1e9+7;
-const int N = 1e3+5;
+const int N = 3e5+5;
 const ll inf = 1e18;
 const ll INF = 0x3f;
 
@@ -35,24 +35,34 @@ void indef(){
 		freopen(JA ".out","w",stdout);	
 	}
 }
-ll dp[N][N];
-ll a[N];
-void solve(){
-	int n,k;
-	cin >> n >> k;
-	for(int i=1;i<=n;i++) cin >> a[i];
-	//dp[i][j] : tổng nhỏ nhất sao cho chọn j cặp, xét đến người thứ i
-	//Chọn tại i là cặp thì nhận lấy kq dp[i - 2][j - 1] (kq min trước đó)
-	sort(a + 1, a + 1 + n);
-	for(int i=0;i<=n;i++) for(int j=0;j<=k;j++) dp[i][j] = inf;
-	for(int i=0;i<=n;i++) dp[i][0] = 0;
 
-	for(int i=2;i<=n;i++){
-		for(int j=1;j<=k;j++){
-			dp[i][j] = min(dp[i - 1][j], a[i] - a[i - 1] + dp[i - 2][j - 1]);
-		}
+void solve(){
+	int n;
+	cin >> n;
+	vector<pair<int,int>> a(n);
+	vector<int> sl,sr;
+	for(auto &[l, r] : a){
+		cin >> l >> r;
+		sl.pb(l);
+		sr.pb(r);
+
 	}
-	cout << dp[n][k];	
+	sort(all(sl));sort(all(sr));
+	for(auto x : sl) cout << x << ' ';cout << nl;
+	for(auto x : sr) cout << x << ' ';cout << nl;
+	int cnt = 0;
+	for(auto [l, r] : a){
+		int left = lower_bound(all(sl),l) - sl.begin() + 1;
+		int right = upper_bound(all(sr),r) - sr.begin();
+		// cout << left << ' ' << right << nl;
+		cout << max(0,right - left) << ' ';
+	}
+	for(auto [l, r] : a){
+		int left = lower_bound(all(sl),l) - sl.begin() + 1;
+		int right = upper_bound(all(sr),r) - sr.begin();
+		// cout << left << ' ' << right << nl;
+		cout << max(0,right - left) << ' ';
+	}
 }
 int main(){
 	fast;

@@ -20,7 +20,7 @@ using namespace std;
 
 
 const int M = 1e9+7;
-const int N = 1e3+5;
+const int N = 3e5+5;
 const ll inf = 1e18;
 const ll INF = 0x3f;
 
@@ -35,25 +35,23 @@ void indef(){
 		freopen(JA ".out","w",stdout);	
 	}
 }
-ll dp[N][N];
-ll a[N];
+int a[N];
+int pref[N], suff[N];
 void solve(){
 	int n,k;
 	cin >> n >> k;
-	for(int i=1;i<=n;i++) cin >> a[i];
-	//dp[i][j] : tổng nhỏ nhất sao cho chọn j cặp, xét đến người thứ i
-	//Chọn tại i là cặp thì nhận lấy kq dp[i - 2][j - 1] (kq min trước đó)
-	sort(a + 1, a + 1 + n);
-	for(int i=0;i<=n;i++) for(int j=0;j<=k;j++) dp[i][j] = inf;
-	for(int i=0;i<=n;i++) dp[i][0] = 0;
+	for(int i=0;i<k;i++) cin >> a[i];
+	for(int i=1;i<=k;i++)
+		pref[i] = pref[i - 1] + (i % 2 == 0)*(a[i - 1] - a[i - 2]);
+	for(int i=k-1;i>=0;i--)
+		suff[i] = suff[i + 1] + ((k - i) % 2 == 0)*(a[i + 1] - a[i]);
 
-	for(int i=2;i<=n;i++){
-		for(int j=1;j<=k;j++){
-			dp[i][j] = min(dp[i - 1][j], a[i] - a[i - 1] + dp[i - 2][j - 1]);
-		}
+	int ans = M;
+	for(int i=0;i<=k;i+=2){
+		ans = min(ans, pref[i] + suff[i]);
 	}
-	cout << dp[n][k];	
-}
+	cout << ans;
+}	
 int main(){
 	fast;
 	indef();

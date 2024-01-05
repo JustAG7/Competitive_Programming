@@ -20,7 +20,7 @@ using namespace std;
 
 
 const int M = 1e9+7;
-const int N = 1e3+5;
+const int N = 3e5+5;
 const ll inf = 1e18;
 const ll INF = 0x3f;
 
@@ -35,29 +35,44 @@ void indef(){
 		freopen(JA ".out","w",stdout);	
 	}
 }
-ll dp[N][N];
-ll a[N];
-void solve(){
-	int n,k;
-	cin >> n >> k;
-	for(int i=1;i<=n;i++) cin >> a[i];
-	//dp[i][j] : tổng nhỏ nhất sao cho chọn j cặp, xét đến người thứ i
-	//Chọn tại i là cặp thì nhận lấy kq dp[i - 2][j - 1] (kq min trước đó)
-	sort(a + 1, a + 1 + n);
-	for(int i=0;i<=n;i++) for(int j=0;j<=k;j++) dp[i][j] = inf;
-	for(int i=0;i<=n;i++) dp[i][0] = 0;
 
-	for(int i=2;i<=n;i++){
-		for(int j=1;j<=k;j++){
-			dp[i][j] = min(dp[i - 1][j], a[i] - a[i - 1] + dp[i - 2][j - 1]);
-		}
+int n;
+void update(int u,int val, vector<ll> &bit){
+	for(;u <= 2*n; u += u & -u){
+		bit[u] += val;
 	}
-	cout << dp[n][k];	
+}
+ll get(int u, vector<ll> &bit){
+	ll ans = 0;
+	for(;u > 0; u -= u & -u){
+		ans += bit[u];
+	}
+	return ans;
+}
+void solve(){
+	cin >> n;
+	vector<ll> bit(2*(n + 5),0);
+	vector<pair<int,int>> a(n);
+	vector<int> res;
+	for(auto &[x, y] : a){
+		cin >> x >> y;
+		res.pb(x);
+		res.pb(y);
+	}
+	sort(all(res));sort(rall(a));
+	ll ans = 0;
+	for(auto &[x, y] : a){
+		x = lower_bound(all(res), x) - res.begin() + 1;
+		y = lower_bound(all(res), y) - res.begin() + 1;
+		ans += get(y,bit) - get(x - 1,bit);
+		update(y,1,bit);
+	}
+	cout << ans << nl;
 }
 int main(){
 	fast;
 	indef();
 	int tt=1;
-	// cin >> tt;
+	cin >> tt;
 	while(tt--) solve();
 }
