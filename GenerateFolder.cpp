@@ -9,7 +9,7 @@ int main() {
     
     // Get the folder name from the user
     std::cout << "Enter folder name: ";
-    folderName = "THDC K22";
+    folderName = "Atcoder ABC 333";
     // std::cin >> folderName;
 
     // Check if the folder already exists
@@ -35,9 +35,9 @@ int main() {
             if (inputFile.is_open() && outputFile.is_open()) {
                 inputFile.close();
                 outputFile.close();
-                std::cout << "input.txt and output.txt created successfully." << std::endl;
+                std::cout << "input and output created successfully." << std::endl;
             } else {
-                std::cerr << "Error creating input.txt and output.txt." << std::endl;
+                std::cerr << "Error creating input and output." << std::endl;
                 return 1;
             }
         } else {
