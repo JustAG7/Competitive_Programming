@@ -20,7 +20,7 @@ using namespace std;
 
 
 const int M = 1e9+7;
-const int N = 3e5+5;
+const int N = 1e3+5;
 const ll inf = 1e18;
 const ll INF = 0x3f;
 
@@ -29,38 +29,33 @@ int moveY[] = {1, -1, 0, 0};
 char moveC[] = {'R', 'L', 'D', 'U'};
 
 void indef(){
-	#define JA "input"
+	#define JA "friend"
 	if(fopen(JA ".inp", "r")){
 		freopen(JA ".inp","r",stdin);
 		freopen(JA ".out","w",stdout);	
 	}
 }
-
+ll dp[N][N];
+ll a[N];
 void solve(){
-	int n;
-	cin >> n;
-	vector<ll> a(n);
-	for(int i=0;i<n;i++) cin >> a[i];
-	sort(all(a));
-	ll x = a[0], y = a[n - 1];
-	vector<int> res;
-	int cnt = 0;
-	while(x != y){
-		res.pb(x % 2);
-		x = (x + res.back()) / 2;
-		y = (y + res.back()) / 2;
-		cnt++;
+	int n,k;
+	cin >> n >> k;
+	for(int i=1;i<=n;i++) cin >> a[i];
+	sort(a + 1, a + 1 + n);
+	for(int i=0;i<=n;i++) for(int j=0;j<=k;j++) dp[i][j] = inf;
+	for(int i=0;i<=n;i++) dp[i][0] = 0;
+
+	for(int i=2;i<=n;i++){
+		for(int j=1;j<=k;j++){
+			dp[i][j] = min(dp[i - 1][j], a[i] - a[i - 1] + dp[i - 2][j - 1]);
+		}
 	}
-	cout << cnt << nl;
-	if(cnt <= n && res.size()){
-		for(auto x : res) cout << x << ' ';
-		cout << nl;
-	}
+	cout << dp[n][k];	
 }
 int main(){
 	fast;
 	indef();
 	int tt=1;
-	cin >> tt;
+	// cin >> tt;
 	while(tt--) solve();
 }

@@ -37,30 +37,14 @@ void indef(){
 }
 
 void solve(){
-	int n;
-	cin >> n;
-	vector<ll> a(n);
-	for(int i=0;i<n;i++) cin >> a[i];
-	sort(all(a));
-	ll x = a[0], y = a[n - 1];
-	vector<int> res;
-	int cnt = 0;
-	while(x != y){
-		res.pb(x % 2);
-		x = (x + res.back()) / 2;
-		y = (y + res.back()) / 2;
-		cnt++;
-	}
-	cout << cnt << nl;
-	if(cnt <= n && res.size()){
-		for(auto x : res) cout << x << ' ';
-		cout << nl;
-	}
+	string s;cin >> s;
+	for(int i=0;i<s.size()-1;i++) cout << s[i];
+	cout << 4;
 }
 int main(){
 	fast;
-	indef();
+	// indef();
 	int tt=1;
-	cin >> tt;
+	// cin >> tt;
 	while(tt--) solve();
 }

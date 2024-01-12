@@ -29,7 +29,7 @@ int moveY[] = {1, -1, 0, 0};
 char moveC[] = {'R', 'L', 'D', 'U'};
 
 void indef(){
-	#define JA "input"
+	#define JA "triplet"
 	if(fopen(JA ".inp", "r")){
 		freopen(JA ".inp","r",stdin);
 		freopen(JA ".out","w",stdout);	
@@ -39,28 +39,18 @@ void indef(){
 void solve(){
 	int n;
 	cin >> n;
-	vector<ll> a(n);
-	for(int i=0;i<n;i++) cin >> a[i];
-	sort(all(a));
-	ll x = a[0], y = a[n - 1];
-	vector<int> res;
-	int cnt = 0;
-	while(x != y){
-		res.pb(x % 2);
-		x = (x + res.back()) / 2;
-		y = (y + res.back()) / 2;
-		cnt++;
-	}
-	cout << cnt << nl;
-	if(cnt <= n && res.size()){
-		for(auto x : res) cout << x << ' ';
-		cout << nl;
+	for(int i=0;i<=n;i++){
+		for(int j=0;j<=n;j++){
+			for(int k=0;k<=n;k++){
+				if(i + j + k <= n) cout << i << ' ' << j << ' ' << k << nl;
+			}
+		}
 	}
 }
 int main(){
 	fast;
 	indef();
 	int tt=1;
-	cin >> tt;
+	// cin >> tt;
 	while(tt--) solve();
 }
