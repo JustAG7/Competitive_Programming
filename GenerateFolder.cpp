@@ -9,7 +9,7 @@ int main() {
     
     // Get the folder name from the user
     std::cout << "Enter folder name: ";
-    folderName = "Atcoder ABC 342";
+    folderName = "Atcoder ABC 347";
     // std::cin >> folderName;
 
     // Check if the folder already exists
