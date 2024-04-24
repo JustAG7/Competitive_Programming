@@ -39,20 +39,19 @@ void indef(){
 void solve(){
 	string s;
 	cin >> s;
-	ll ans = 0;
-	for(int l = 0;l < s.size() - 2;l++){
-		bool ok = false;
-		int cntO = 0, cntL = 0, cntP = 0;
-		for(int r = l;r < s.size();r++){
-			if(s[r] == 'O') cntO++;
-			if(s[r] == 'L') cntL++;
-			if(s[r] == 'P') cntP++;
-			if(max({cntO,cntL,cntP}) >= 3){
-				ans += (int)s.size() - r;
-				break;
-			}
-			// cout << r << ' ';	
+	stack<char> st;
+	for(char c : s){
+		if(st.empty() || c != st.top()){
+			st.push(c);
 		}
+	}
+	while(st.size() >= 4){
+		st.pop();st.pop();
+	}
+	string ans = "";
+	while(!st.empty()){
+		ans = st.top() + ans;
+		st.pop();
 	}
 	cout << ans;
 }

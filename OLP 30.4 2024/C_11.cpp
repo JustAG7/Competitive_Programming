@@ -35,26 +35,23 @@ void indef(){
 		freopen(JA ".out","w",stdout);	
 	}
 }
-
+int n, q;
+string s;
+int a[N], cnt[N];
+ll pref[N];
 void solve(){
-	string s;
+	cin >> n >> q;
 	cin >> s;
-	ll ans = 0;
-	for(int l = 0;l < s.size() - 2;l++){
-		bool ok = false;
-		int cntO = 0, cntL = 0, cntP = 0;
-		for(int r = l;r < s.size();r++){
-			if(s[r] == 'O') cntO++;
-			if(s[r] == 'L') cntL++;
-			if(s[r] == 'P') cntP++;
-			if(max({cntO,cntL,cntP}) >= 3){
-				ans += (int)s.size() - r;
-				break;
-			}
-			// cout << r << ' ';	
-		}
+	for(int i=1;i<=n;i++) cin >> a[i];
+	for(int i=1;i<=n;i++){
+		cnt[i] = cnt[i - 1] + (s[i - 1] == '1');
+		pref[i] = pref[i - 1] + a[i];
 	}
-	cout << ans;
+	while(q--){
+		int u, v;
+		cin >> u >> v;
+		
+	}
 }
 int main(){
 	fast;

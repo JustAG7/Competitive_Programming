@@ -52,7 +52,7 @@ void solve(){
 	cin >> n >> m >> k;
 	while(m--){
 		int u, v;
-		cin >> u >> v;
+		cin >> u >> v;	
 		g[u].pb(v);
 		g[v].pb(u);
 	}

@@ -35,26 +35,30 @@ void indef(){
 		freopen(JA ".out","w",stdout);	
 	}
 }
-
-void solve(){
-	string s;
-	cin >> s;
-	ll ans = 0;
-	for(int l = 0;l < s.size() - 2;l++){
-		bool ok = false;
-		int cntO = 0, cntL = 0, cntP = 0;
-		for(int r = l;r < s.size();r++){
-			if(s[r] == 'O') cntO++;
-			if(s[r] == 'L') cntL++;
-			if(s[r] == 'P') cntP++;
-			if(max({cntO,cntL,cntP}) >= 3){
-				ans += (int)s.size() - r;
-				break;
-			}
-			// cout << r << ' ';	
-		}
+int getSize(ll n){
+	int ans = 0;
+	while(n){
+		n /= 10;
+		ans++;
 	}
-	cout << ans;
+	return ans;
+}
+void solve(){
+	ll x, m;
+	cin >> x >> m;
+	if(x >= m) return cout << 0, void();
+	ll ans = 0, mx = m;
+	int sz = getSize(x);
+	for(int i=0;i<getSize(x);i++){
+		mx /= 10;
+	}
+	ll y = mx;
+	for(int i=0;i<getSize(x);i++){
+		y *= 10;
+	}
+	y += x;
+	if(m < y) ans--;
+	cout << max(ans + mx, 0LL); 
 }
 int main(){
 	fast;

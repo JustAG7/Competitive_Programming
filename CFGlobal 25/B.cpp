@@ -37,29 +37,16 @@ void indef(){
 }
 
 void solve(){
-	string s;
-	cin >> s;
-	ll ans = 0;
-	for(int l = 0;l < s.size() - 2;l++){
-		bool ok = false;
-		int cntO = 0, cntL = 0, cntP = 0;
-		for(int r = l;r < s.size();r++){
-			if(s[r] == 'O') cntO++;
-			if(s[r] == 'L') cntL++;
-			if(s[r] == 'P') cntP++;
-			if(max({cntO,cntL,cntP}) >= 3){
-				ans += (int)s.size() - r;
-				break;
-			}
-			// cout << r << ' ';	
-		}
-	}
-	cout << ans;
+	int n, k;
+	cin >> n >> k;
+	vector<int> a(n);
+	for(int &x : a) cin >> x;
+		
 }
 int main(){
 	fast;
 	indef();
 	int tt=1;
-	// cin >> tt;
+	cin >> tt;
 	while(tt--) solve();
 }
