@@ -19,8 +19,8 @@ using namespace std;
 #define donetest cout << "done\n";
 
 
-const int M = 111539786;
-const int N = 3e5+5;
+const int M = 1e9+7;
+const int N = 1e5+5;
 const ll inf = 1e18;
 const ll INF = 0x3f;
 
@@ -35,36 +35,42 @@ void indef(){
 		freopen(JA ".out","w",stdout);	
 	}
 }
-ll dp[105][15][5005];
-bool banned[105][15];
-int m,n,k,s;
-ll calc(int i,int j,ll edges){
-	if(i > m) return (edges == 0);
-	if(j > n) return calc(i + 1, 1, edges);
-	if(dp[i][j][edges] != -1) return dp[i][j][edges];
-	ll res = 0;
 
-	if(edges >= 2)
-		(res += calc(i, j + 1, edges - 2)) %= M;
-	
-	if(!(banned[i][j] or banned[i][j + 1] or j == n))
-		(res += calc(i,j + 1,edges - 1)) %= M;
-	
-	if(!(banned[i][j] or banned[i + 1][j] or i == m))
-		(res += calc(i,j + 1,edges - 1)) %= M;
-	
-	return dp[i][j][edges] = res;
+int n;
+vector<vector<int>> tree(4 * N);
+int a[N];
+void build(int id,int l,int r){
+	if(l == r){
+		tree[id].pb(a[l]);
+		return;
+	}
+	int m = (l + r)/2;
+
+	build(id * 2, l, m);
+	build(id * 2 + 1, m + 1, r);
+	tree[id].resize(tree[id * 2].size() + tree[id * 2 + 1].size());
+	merge(all(tree[id * 2]), all(tree[id * 2 + 1]), tree[id].begin());
+}
+int get(int id,int l, int r, int v, int x){
+	if(v < l || l > r) return 0;
+	// cerr << l << ' ' << r << nl;
+	if(r <= v){
+		int cnt = lower_bound(all(tree[id]), x) - tree[id].begin();
+		return (int)tree[id].size() - cnt;
+	}
+	int m = (l + r)/2;
+	return get(id * 2, l, m, v, x) + get(id * 2 + 1, m + 1, r, v, x);
 }
 void solve(){
-	memset(dp,-1,sizeof(dp));
-	cin >> m >> n >> k >> s;
-	for(int i=0;i<s;i++){
-		int x,y;
-		cin >> x >> y;
-		banned[x][y] = true;
+	cin >> n;
+	for(int i=1;i<=n;i++) cin >> a[i];
+	build(1, 1, n);
+	vector<int> ans;
+	for(int i=n;i>=1;i--){
+		ans.pb(get(1, 1, n, i - 1, a[i]));
 	}
-	ll edges = (m + 1)*(n + 1) + k + s - 1 - m - n;
-	cout << calc(1,1,edges);
+	reverse(all(ans));
+	for(auto x : ans) cout << x << ' ';
 }
 int main(){
 	fast;

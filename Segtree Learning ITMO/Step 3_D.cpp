@@ -19,8 +19,8 @@ using namespace std;
 #define donetest cout << "done\n";
 
 
-const int M = 111539786;
-const int N = 3e5+5;
+const int M = 1e9+7;
+const int N = 2e5+5;
 const ll inf = 1e18;
 const ll INF = 0x3f;
 
@@ -35,36 +35,46 @@ void indef(){
 		freopen(JA ".out","w",stdout);	
 	}
 }
-ll dp[105][15][5005];
-bool banned[105][15];
-int m,n,k,s;
-ll calc(int i,int j,ll edges){
-	if(i > m) return (edges == 0);
-	if(j > n) return calc(i + 1, 1, edges);
-	if(dp[i][j][edges] != -1) return dp[i][j][edges];
-	ll res = 0;
 
-	if(edges >= 2)
-		(res += calc(i, j + 1, edges - 2)) %= M;
-	
-	if(!(banned[i][j] or banned[i][j + 1] or j == n))
-		(res += calc(i,j + 1,edges - 1)) %= M;
-	
-	if(!(banned[i][j] or banned[i + 1][j] or i == m))
-		(res += calc(i,j + 1,edges - 1)) %= M;
-	
-	return dp[i][j][edges] = res;
+int tree[4 * N], ans[N], pos[N];
+void update(int id,int l,int r,int idx, int val){
+	if(idx < l || r < idx) return;
+	if(l == r){
+		tree[id] = val;
+		return;
+	}
+	int m = (l + r)/2;
+	update(id * 2, l, m, idx, val);
+	update(id * 2 + 1, m + 1, r, idx, val);
+	tree[id] = tree[id * 2] + tree[id * 2 + 1];
+}
+int get(int id,int l,int r,int u,int v){
+	if(v < l || r < u) return 0;
+	if(u <= l && r <= v) return tree[id];
+	int m = (l + r)/2;
+	return get(id * 2, l, m, u, v) + get(id * 2 + 1, m + 1, r, u, v);
 }
 void solve(){
-	memset(dp,-1,sizeof(dp));
-	cin >> m >> n >> k >> s;
-	for(int i=0;i<s;i++){
-		int x,y;
-		cin >> x >> y;
-		banned[x][y] = true;
+	int n;
+	cin >> n;
+	vector<int> a(n * 2 + 2);
+	for(int i=1;i<=2*n;i++) cin >> a[i];
+	for(int t=0;t<2;t++){
+		for(int i=1;i<=2*n;i++){
+			if(!pos[a[i]]){
+				pos[a[i]] = i;
+				update(1, 1, 2*n, i, 1);
+			}
+			else{
+				update(1, 1, 2*n, pos[a[i]], 0);
+				ans[a[i]] += get(1, 1, 2*n, pos[a[i]], i);
+				pos[a[i]] = 0;
+			}
+		}
+		reverse(all(a));
 	}
-	ll edges = (m + 1)*(n + 1) + k + s - 1 - m - n;
-	cout << calc(1,1,edges);
+	for(int i=1;i<=n;i++) cout << ans[i] << ' ';
+
 }
 int main(){
 	fast;
