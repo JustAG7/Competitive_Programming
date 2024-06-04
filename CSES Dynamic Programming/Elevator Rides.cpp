@@ -20,7 +20,7 @@ using namespace std;
 
 
 const int M = 1e9+7;
-const int N = 1e5+5;
+const int N = 3e5+5;
 const ll inf = 1e18;
 const ll INF = 0x3f;
 
@@ -35,49 +35,28 @@ void indef(){
 		freopen(JA ".out","w",stdout);	
 	}
 }
-int tree[4 * N];
-int a[N], n, q;
-void update(int id,int l,int r,int idx, int val){
-	if(idx < l || r < idx) return;
-	if(l == r){
-		tree[id] = val;
-		return;
-	}
-	int m = (l + r)/2;
-	update(id * 2, l, m, idx, val);
-	update(id * 2 + 1, m + 1, r, idx, val);
-	tree[id] = min(tree[id * 2], tree[id * 2 + 1]);
-}
-int get(int id,int l,int r, int u, int v, int p){
-	if(v < l || r < u) return 0;
-	if(tree[id] > p) return 0;
-	if(l == r){
-		tree[id] = M;
-		return 1;
-	}
-	int m = (l + r)/2;
-	int x = get(id * 2, l, m, u, v, p);
-	int y = get(id * 2 + 1, m + 1, r, u, v, p);
-	tree[id] = min(tree[id * 2], tree[id * 2 + 1]);
-	return x + y;
-}
+pair<ll,ll> dp[1 << (20)];
+ll a[20];
 void solve(){
-	for(int i=1;i<4*N;i++) tree[i] = M;
-	cin >> n >> q;
-	while(q--){
-		int t;
-		cin >> t;
-		if(t == 1){
-			int i, h;
-			cin >> i >> h;
-			update(1, 1, n, i + 1, h);
-		}
-		else{
-			int l, r, p;
-			cin >> l >> r >> p;
-			cout << get(1, 1, n, l + 1, r, p) << nl;
+	int n, x;
+	cin >> n >> x;
+	dp[0] = {1, 0};
+	for(int i=0;i<n;i++) cin >> a[i];
+	for(int mask = 1; mask < (1 << n); mask++){
+		dp[mask] = {21, 0};
+		for(int i=0;i<n;i++){
+			if((mask >> i) & 1){
+				auto [rides, weight] = dp[mask ^ (1 << i)];
+				if(weight + a[i] > x){
+					rides++;
+					weight = min(weight, a[i]);
+				}
+				else weight += a[i];
+				dp[mask] = min(dp[mask], {rides, weight});
+			}
 		}
 	}
+	cout << dp[(1 << n) - 1].X;
 }
 int main(){
 	fast;

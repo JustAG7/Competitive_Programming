@@ -35,49 +35,31 @@ void indef(){
 		freopen(JA ".out","w",stdout);	
 	}
 }
-int tree[4 * N];
-int a[N], n, q;
-void update(int id,int l,int r,int idx, int val){
-	if(idx < l || r < idx) return;
-	if(l == r){
-		tree[id] = val;
-		return;
-	}
-	int m = (l + r)/2;
-	update(id * 2, l, m, idx, val);
-	update(id * 2 + 1, m + 1, r, idx, val);
-	tree[id] = min(tree[id * 2], tree[id * 2 + 1]);
-}
-int get(int id,int l,int r, int u, int v, int p){
-	if(v < l || r < u) return 0;
-	if(tree[id] > p) return 0;
-	if(l == r){
-		tree[id] = M;
-		return 1;
-	}
-	int m = (l + r)/2;
-	int x = get(id * 2, l, m, u, v, p);
-	int y = get(id * 2 + 1, m + 1, r, u, v, p);
-	tree[id] = min(tree[id * 2], tree[id * 2 + 1]);
-	return x + y;
-}
+
+ll dp[N][6];
+ll coeff[5];
+ll a[N];
 void solve(){
-	for(int i=1;i<4*N;i++) tree[i] = M;
-	cin >> n >> q;
-	while(q--){
-		int t;
-		cin >> t;
-		if(t == 1){
-			int i, h;
-			cin >> i >> h;
-			update(1, 1, n, i + 1, h);
+	int n; ll w1, w2;
+	cin >> n >> w1 >> w2;
+	for(int i=1;i<=n;i++) cin >> a[i];
+	for(int i=0;i<=n;i++){
+		for(int j=0;j<=5;j++){
+			dp[i][j] = -inf;
 		}
-		else{
-			int l, r, p;
-			cin >> l >> r >> p;
-			cout << get(1, 1, n, l + 1, r, p) << nl;
+	}	
+	dp[0][0] = 0;
+	coeff[0] = w1, coeff[1] = w2, coeff[2] = 1, coeff[3] = w2, coeff[4] = w1;
+	
+	for(int i=0;i<=n;i++){
+		for(int j=0;j<=5;j++){
+			if(dp[i][j] <= -inf) continue;
+			dp[i + 1][j] = max(dp[i + 1][j], dp[i][j]);
+			if(i + 1 <= n && j + 1 <= 5)
+				dp[i + 1][j + 1] = max(dp[i + 1][j + 1], dp[i][j] + coeff[j] * a[i + 1]);
 		}
 	}
+	cout << dp[n][5];
 }
 int main(){
 	fast;

@@ -20,7 +20,7 @@ using namespace std;
 
 
 const int M = 1e9+7;
-const int N = 1e5+5;
+const int N = 4e5+5;
 const ll inf = 1e18;
 const ll INF = 0x3f;
 
@@ -35,48 +35,55 @@ void indef(){
 		freopen(JA ".out","w",stdout);	
 	}
 }
-int tree[4 * N];
-int a[N], n, q;
-void update(int id,int l,int r,int idx, int val){
-	if(idx < l || r < idx) return;
-	if(l == r){
-		tree[id] = val;
-		return;
+
+vector<array<int, 3>> query;
+vector<int> res;
+int a[N], bit[N];
+void upd(int u,int val){
+	for(; u <= N; u += u & -u){
+		bit[u] += val;
 	}
-	int m = (l + r)/2;
-	update(id * 2, l, m, idx, val);
-	update(id * 2 + 1, m + 1, r, idx, val);
-	tree[id] = min(tree[id * 2], tree[id * 2 + 1]);
 }
-int get(int id,int l,int r, int u, int v, int p){
-	if(v < l || r < u) return 0;
-	if(tree[id] > p) return 0;
-	if(l == r){
-		tree[id] = M;
-		return 1;
+void add(int x,int val){
+	int pos = upper_bound(all(res), x) - res.begin();
+	upd(pos, val);
+}
+int get(int u){
+	int ans = 0;
+	for(; u > 0; u -= u & -u){
+		ans += bit[u];
 	}
-	int m = (l + r)/2;
-	int x = get(id * 2, l, m, u, v, p);
-	int y = get(id * 2 + 1, m + 1, r, u, v, p);
-	tree[id] = min(tree[id * 2], tree[id * 2 + 1]);
-	return x + y;
+	return ans;
+}
+int getRange(int x){
+	int pos = upper_bound(all(res), x) - res.begin();
+	return get(pos);
 }
 void solve(){
-	for(int i=1;i<4*N;i++) tree[i] = M;
+	int n, q;
 	cin >> n >> q;
-	while(q--){
-		int t;
-		cin >> t;
-		if(t == 1){
-			int i, h;
-			cin >> i >> h;
-			update(1, 1, n, i + 1, h);
+	for(int i=1;i<=n;i++){
+		cin >> a[i];
+		res.pb(a[i]);
+	}
+
+	for(int i=0;i<q;i++){
+		char t;int a, b;
+		cin >> t >> a >> b;
+		query.pb({t == '?', a, b});
+		if(t == '!') res.pb(b);
+	}
+	sort(all(res));
+	res.erase(unique(all(res)), res.end());
+	for(int i=1;i<=n;i++) add(a[i], 1);
+	
+	for(auto q : query){
+		if(q[0] == 0){
+			add(a[q[1]], -1);
+			a[q[1]] = q[2];
+			add(a[q[1]], 1);
 		}
-		else{
-			int l, r, p;
-			cin >> l >> r >> p;
-			cout << get(1, 1, n, l + 1, r, p) << nl;
-		}
+		else cout << getRange(q[2]) - getRange(q[1] - 1) << nl;
 	}
 }
 int main(){

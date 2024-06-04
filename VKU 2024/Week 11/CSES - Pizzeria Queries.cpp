@@ -20,7 +20,7 @@ using namespace std;
 
 
 const int M = 1e9+7;
-const int N = 1e5+5;
+const int N = 2e5+5;
 const ll inf = 1e18;
 const ll INF = 0x3f;
 
@@ -35,47 +35,52 @@ void indef(){
 		freopen(JA ".out","w",stdout);	
 	}
 }
-int tree[4 * N];
-int a[N], n, q;
-void update(int id,int l,int r,int idx, int val){
-	if(idx < l || r < idx) return;
-	if(l == r){
-		tree[id] = val;
-		return;
+struct SegTree{
+	ll tree[4*N];
+	void update(int id,int l,int r,int idx,ll val){
+		if(idx < l || r < idx) return;
+		if(l == r){
+			tree[id] = val;
+			return;
+		}
+		int m = (l + r)/2;
+		update(id * 2, l, m, idx, val);
+		update(id * 2 + 1, m + 1, r, idx, val);
+		tree[id] = min(tree[id * 2],tree[id * 2 + 1]);
 	}
-	int m = (l + r)/2;
-	update(id * 2, l, m, idx, val);
-	update(id * 2 + 1, m + 1, r, idx, val);
-	tree[id] = min(tree[id * 2], tree[id * 2 + 1]);
-}
-int get(int id,int l,int r, int u, int v, int p){
-	if(v < l || r < u) return 0;
-	if(tree[id] > p) return 0;
-	if(l == r){
-		tree[id] = M;
-		return 1;
+
+	ll get(int id,int l,int r,int u,int v){
+		if(v < l || r < u) return M;
+		// cerr << l << ' ' << r << nl;
+		if(u <= l && r <= v) return tree[id];
+		int m = (l + r)/2;
+		return min(get(id * 2, l, m, u, v),get(id * 2 + 1, m + 1, r, u, v));
 	}
-	int m = (l + r)/2;
-	int x = get(id * 2, l, m, u, v, p);
-	int y = get(id * 2 + 1, m + 1, r, u, v, p);
-	tree[id] = min(tree[id * 2], tree[id * 2 + 1]);
-	return x + y;
-}
+} lft, rght;
 void solve(){
-	for(int i=1;i<4*N;i++) tree[i] = M;
+	int n, q;
 	cin >> n >> q;
+	for(int i=1;i<=n;i++){
+		int x;
+		cin >> x;
+		lft.update(1, 1, n, i, x - i);
+		rght.update(1, 1, n, i, x + i);
+	}
 	while(q--){
 		int t;
 		cin >> t;
 		if(t == 1){
-			int i, h;
-			cin >> i >> h;
-			update(1, 1, n, i + 1, h);
+			ll i, val;
+			cin >> i >> val;
+			lft.update(1, 1, n, i, val - i);
+			rght.update(1, 1, n, i, val + i);
 		}
 		else{
-			int l, r, p;
-			cin >> l >> r >> p;
-			cout << get(1, 1, n, l + 1, r, p) << nl;
+			int k;
+			cin >> k;
+			ll l = lft.get(1, 1, n, 1, k) + k;
+			ll r = rght.get(1, 1, n, k, n) - k;
+			cout << min(l, r) << nl;
 		}
 	}
 }

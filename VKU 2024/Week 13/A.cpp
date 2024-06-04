@@ -35,49 +35,41 @@ void indef(){
 		freopen(JA ".out","w",stdout);	
 	}
 }
-int tree[4 * N];
-int a[N], n, q;
-void update(int id,int l,int r,int idx, int val){
-	if(idx < l || r < idx) return;
-	if(l == r){
-		tree[id] = val;
-		return;
+queue<int> q;
+vector<int> g[N];
+int f[N];
+bool vis[N];
+int n, m, k;
+void bfs(){
+	while(!q.empty()){
+		int u = q.front();q.pop();
+		for(auto v : g[u]){
+			if(vis[v] == true) continue;
+			f[v] = f[u] + 1;
+			vis[v] = true;
+			q.push(v);
+		}
 	}
-	int m = (l + r)/2;
-	update(id * 2, l, m, idx, val);
-	update(id * 2 + 1, m + 1, r, idx, val);
-	tree[id] = min(tree[id * 2], tree[id * 2 + 1]);
-}
-int get(int id,int l,int r, int u, int v, int p){
-	if(v < l || r < u) return 0;
-	if(tree[id] > p) return 0;
-	if(l == r){
-		tree[id] = M;
-		return 1;
-	}
-	int m = (l + r)/2;
-	int x = get(id * 2, l, m, u, v, p);
-	int y = get(id * 2 + 1, m + 1, r, u, v, p);
-	tree[id] = min(tree[id * 2], tree[id * 2 + 1]);
-	return x + y;
 }
 void solve(){
-	for(int i=1;i<4*N;i++) tree[i] = M;
-	cin >> n >> q;
-	while(q--){
-		int t;
-		cin >> t;
-		if(t == 1){
-			int i, h;
-			cin >> i >> h;
-			update(1, 1, n, i + 1, h);
-		}
-		else{
-			int l, r, p;
-			cin >> l >> r >> p;
-			cout << get(1, 1, n, l + 1, r, p) << nl;
-		}
+	memset(f, 0x3f, sizeof(f));
+	cin >> n;
+	cin >> k;
+	for(int i=0;i<k;i++){
+		int x;cin >> x;
+		q.push(x);
+		vis[x] = true;
+		f[x] = 0;
 	}
+	cin >> m;
+	for(int i=0;i<m;i++){
+		int u, v;
+		cin >> u >> v;
+		g[u].pb(v);
+		g[v].pb(u);
+	}
+	bfs();
+	for(int i=1;i<=n;i++) cout << f[i] << ' ';
 }
 int main(){
 	fast;

@@ -20,7 +20,7 @@ using namespace std;
 
 
 const int M = 1e9+7;
-const int N = 1e5+5;
+const int N = 1e3+5;
 const ll inf = 1e18;
 const ll INF = 0x3f;
 
@@ -35,48 +35,43 @@ void indef(){
 		freopen(JA ".out","w",stdout);	
 	}
 }
-int tree[4 * N];
-int a[N], n, q;
-void update(int id,int l,int r,int idx, int val){
-	if(idx < l || r < idx) return;
-	if(l == r){
-		tree[id] = val;
-		return;
-	}
-	int m = (l + r)/2;
-	update(id * 2, l, m, idx, val);
-	update(id * 2 + 1, m + 1, r, idx, val);
-	tree[id] = min(tree[id * 2], tree[id * 2 + 1]);
-}
-int get(int id,int l,int r, int u, int v, int p){
-	if(v < l || r < u) return 0;
-	if(tree[id] > p) return 0;
-	if(l == r){
-		tree[id] = M;
-		return 1;
-	}
-	int m = (l + r)/2;
-	int x = get(id * 2, l, m, u, v, p);
-	int y = get(id * 2 + 1, m + 1, r, u, v, p);
-	tree[id] = min(tree[id * 2], tree[id * 2 + 1]);
-	return x + y;
+ll t[N], y[N], z[N];
+ll mx, n;
+
+ll calc(int i, ll time){
+	ll sum = 0;
+	ll tmp = t[i] * z[i] + y[i];
+	ll remain = time % tmp;
+	sum += z[i] * (time / tmp);
+	if(remain >= t[i] * z[i]) sum += z[i];
+	else sum += remain / t[i];
+	return sum;
 }
 void solve(){
-	for(int i=1;i<4*N;i++) tree[i] = M;
-	cin >> n >> q;
-	while(q--){
-		int t;
-		cin >> t;
-		if(t == 1){
-			int i, h;
-			cin >> i >> h;
-			update(1, 1, n, i + 1, h);
+	cin >> mx >> n;
+	for(int i=1;i<=n;i++){
+		cin >> t[i] >> z[i] >> y[i];
+	}
+	ll l = -1, r = 2e9+1, ans = 1e10;
+	while(l <= r){
+		ll m = (l + r)/2;
+		ll sum = 0;
+		for(int i=1;i<=n;i++){
+			sum += calc(i, m);
+			if(sum >= mx) break;
 		}
-		else{
-			int l, r, p;
-			cin >> l >> r >> p;
-			cout << get(1, 1, n, l + 1, r, p) << nl;
+		if(sum >= mx){
+			ans = m;
+			r = m - 1;
 		}
+		else l = m + 1;
+	}
+	cout << ans << nl;
+	for(int i=1;i<=n;i++){
+		ll cnt = calc(i, ans);
+		ll res = min(mx, cnt);
+		cout << res << ' ';
+		mx -= res;
 	}
 }
 int main(){

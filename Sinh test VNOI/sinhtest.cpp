@@ -15,14 +15,18 @@ bool check(int n){
 int main()
 {
     srand(time(NULL));
-    for(int iTest = 1; iTest <= 12; iTest++)
+    for(int iTest = 1; iTest <= 100; iTest++)
     {
         ofstream inp(NAME + ".inp");
-        if(iTest <= 6) MAXN = 1000;
+        if(iTest <= 30) MAXN = 100;
         else if(iTest <= 10) MINN = 1001, MAXN = 10000;
         else MINN = 10001, MAXN = 30000; 
         n = MINN + rand() % (MAXN - MINN + 1);
+        for(int i=1;i<=n;i++){
+            a[i] = MINN + rand() & (1e9 - MINN + 1);
+        }
         inp << n << '\n';
+        for(int i=1;i<=n;i++) inp << a[i] << ' ';
         for(int i=0;i<n;i++){
             m = MINN + rand() % (100000 - MINN + 1);
             while(!check(m)) {
@@ -31,7 +35,7 @@ int main()
             inp << m << ' ';
         }
         // sinh test o day
-        // su dung inp << 
+        // cout << -> inp <<
         
         inp.close();
         

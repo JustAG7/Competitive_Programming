@@ -39,7 +39,7 @@ vector<ii> g1[N], g2[N];
 ll dp[N][4][4][2];
 int n, m, a, b;
 void solve(){
-		dp[1][0][0][0] = 0;
+	dp[1][0][0][0] = 0;
 	cin >> n >> m >> a >> b;
 	for(int i=0;i<m;i++){
 		int u, v, w;

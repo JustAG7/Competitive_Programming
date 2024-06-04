@@ -4,7 +4,7 @@ using namespace std;
 #define ll long long
 #define pb push_back
 #define pf push_front
-#define db double
+#define db long double
 #define X first
 #define Y second
 #define all(x) (x).begin(),(x).end()
@@ -20,7 +20,7 @@ using namespace std;
 
 
 const int M = 1e9+7;
-const int N = 1e5+5;
+const int N = 3e5+5;
 const ll inf = 1e18;
 const ll INF = 0x3f;
 
@@ -35,54 +35,23 @@ void indef(){
 		freopen(JA ".out","w",stdout);	
 	}
 }
-int tree[4 * N];
-int a[N], n, q;
-void update(int id,int l,int r,int idx, int val){
-	if(idx < l || r < idx) return;
-	if(l == r){
-		tree[id] = val;
-		return;
-	}
-	int m = (l + r)/2;
-	update(id * 2, l, m, idx, val);
-	update(id * 2 + 1, m + 1, r, idx, val);
-	tree[id] = min(tree[id * 2], tree[id * 2 + 1]);
-}
-int get(int id,int l,int r, int u, int v, int p){
-	if(v < l || r < u) return 0;
-	if(tree[id] > p) return 0;
-	if(l == r){
-		tree[id] = M;
-		return 1;
-	}
-	int m = (l + r)/2;
-	int x = get(id * 2, l, m, u, v, p);
-	int y = get(id * 2 + 1, m + 1, r, u, v, p);
-	tree[id] = min(tree[id * 2], tree[id * 2 + 1]);
-	return x + y;
+ll calc(db n, db m, db x){
+	db y = 1.5 * x, z = 1.0 * sqrt(3) * x;
+	db rows = ceil((n - x) / y) + 1;
+	ll cols_1 = ceil(m/z);
+	ll cols_2 = ceil((m - (z/2))/z) + 1;
+	ll ans = ceil(rows/2) * cols_1 + floor(rows/2) * cols_2;
+	return ans;
 }
 void solve(){
-	for(int i=1;i<4*N;i++) tree[i] = M;
-	cin >> n >> q;
-	while(q--){
-		int t;
-		cin >> t;
-		if(t == 1){
-			int i, h;
-			cin >> i >> h;
-			update(1, 1, n, i + 1, h);
-		}
-		else{
-			int l, r, p;
-			cin >> l >> r >> p;
-			cout << get(1, 1, n, l + 1, r, p) << nl;
-		}
-	}
+	db n, m, x;
+	cin >> n >> m >> x;
+	cout << min(calc(n, m, x), calc(m, n, x)) << nl; 
 }
 int main(){
 	fast;
 	indef();
 	int tt=1;
-	// cin >> tt;
+	cin >> tt;
 	while(tt--) solve();
 }

@@ -21,6 +21,7 @@ using namespace std;
 
 const int M = 1e9+7;
 const int N = 1e5+5;
+const int B = 1e6 + 5;
 const ll inf = 1e18;
 const ll INF = 0x3f;
 
@@ -35,49 +36,50 @@ void indef(){
 		freopen(JA ".out","w",stdout);	
 	}
 }
-int tree[4 * N];
-int a[N], n, q;
-void update(int id,int l,int r,int idx, int val){
-	if(idx < l || r < idx) return;
-	if(l == r){
-		tree[id] = val;
-		return;
-	}
-	int m = (l + r)/2;
-	update(id * 2, l, m, idx, val);
-	update(id * 2 + 1, m + 1, r, idx, val);
-	tree[id] = min(tree[id * 2], tree[id * 2 + 1]);
+int bit[B];
+int a[N], vis[B];
+int ans[N];
+struct query{
+	int l, r, idx;
+};
+bool cmp(query &a, query &b){
+	return a.r < b.r;
 }
-int get(int id,int l,int r, int u, int v, int p){
-	if(v < l || r < u) return 0;
-	if(tree[id] > p) return 0;
-	if(l == r){
-		tree[id] = M;
-		return 1;
+void upd(int u,int val){
+	for(;u < B; u += u & (-u)){
+		bit[u] += val;
 	}
-	int m = (l + r)/2;
-	int x = get(id * 2, l, m, u, v, p);
-	int y = get(id * 2 + 1, m + 1, r, u, v, p);
-	tree[id] = min(tree[id * 2], tree[id * 2 + 1]);
-	return x + y;
+}
+int get(int u){
+	int ans = 0;
+	for(;u > 0; u -= u & (-u)){
+		ans += bit[u];
+	}
+	return ans;
 }
 void solve(){
-	for(int i=1;i<4*N;i++) tree[i] = M;
+	int n, q;
 	cin >> n >> q;
-	while(q--){
-		int t;
-		cin >> t;
-		if(t == 1){
-			int i, h;
-			cin >> i >> h;
-			update(1, 1, n, i + 1, h);
-		}
-		else{
-			int l, r, p;
-			cin >> l >> r >> p;
-			cout << get(1, 1, n, l + 1, r, p) << nl;
+	vector<query> queries;
+	for(int i=1;i<=n;i++) cin >> a[i];
+	for(int i=0;i<q;i++){
+		query x;
+		cin >> x.l >> x.r;
+		x.idx = i;
+		queries.pb(x);
+	}
+	sort(all(queries), cmp);
+	int cnt = 0;
+	for(int i=1;i<=n;i++){
+		if(vis[a[i]]) upd(vis[a[i]], -1);
+		vis[a[i]] = i;
+		upd(i, 1);
+		while(cnt < q && queries[cnt].r == i){
+			ans[queries[cnt].idx] = get(queries[cnt].r) - get(queries[cnt].l - 1);
+			cnt++;
 		}
 	}
+	for(int i=0;i<q;i++) cout << ans[i] << nl;
 }
 int main(){
 	fast;
@@ -86,3 +88,4 @@ int main(){
 	// cin >> tt;
 	while(tt--) solve();
 }
+
