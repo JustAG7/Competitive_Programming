@@ -42,21 +42,12 @@ db eps = 1e-6;
 
 pair<ll, db> calc(db length, db width, db height){
 	db gap = ((r1 - r2) * height) / h;
-	db len = (r1 * 4.0) + (r2 + gap) * 2.0 + width;
-	ll cnt = (ll) len / length;
-	db nLen = 1.0 * cnt * length;
-
-	ll ans = cnt * 4;
-	db vol = (db)4.0 * cnt * length * width * height;
-	db remain = len - nLen;
-	// cerr << "calc: " << gap << ' ' << len << ' ' << cnt << ' ' << remain << nl;
-	if(remain <= 0) return {ans, vol};
-
-	db totalRemain = remain * 4;
-	ll remainBrick = totalRemain / length;
-	if(totalRemain - length * remainBrick > 0) remainBrick++;
-	ans += remainBrick;
-	vol += remain * 4.0 * width * height;
+	db leng = (r1 * 4.0) + (r2 + gap) * 2.0 + width;
+	db vol = leng * width * height * 4.0;
+	ll ans = (ll)vol / (length * width * height);
+	if(abs(vol - 1.0 * ans * (length * width * height)) > eps){
+		ans++;
+	}
 	return {ans, vol};
 }
 void solve(){
@@ -64,6 +55,7 @@ void solve(){
 	vector<db> a(3);
 	for(int i=0;i<3;i++) cin >> a[i];
 	ll ans = inf; db volume = inf;
+	sort(all(a));
 	do{
 		// cerr << "init : " << a[0] << ' ' << a[1] << ' ' << a[2] << nl;
 		// cerr << "ans: ";
@@ -71,7 +63,7 @@ void solve(){
 		// cerr << cnt << ' ' << vol << nl;
 		if(cnt < ans){
 			ans = cnt;
-			volume = min(volume, vol);
+			volume = vol;
 		}
 		else if(cnt == ans){
 			volume = min(volume, vol);

@@ -9,7 +9,7 @@ int main() {
     
     // Get the folder name from the user
     std::cout << "Enter folder name: ";
-    folderName = "THT KVMT 2022";
+    folderName = "TS10 DN 2024";
     // std::cin >> folderName;
 
     // Check if the folder already exists

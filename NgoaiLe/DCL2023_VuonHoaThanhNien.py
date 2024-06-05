@@ -1,6 +1,8 @@
 import sys
 import itertools
-import math
+from decimal import Decimal, getcontext
+
+getcontext().prec = 100
 
 def indef():
     try:
@@ -15,27 +17,24 @@ def calc(length, width, height, r1, r2, h):
 
     vol = leng * width * height * 4
     ans = int(vol / (length * width * height))
-    if(vol - ans * (length * width * height) > 0):
+    if vol - (length * width * height) * ans > 0:
         ans += 1
     return ans, vol
 
 def solve():
-    r1, r2, h = map(float, input().split())
-    a = list(map(float, input().split()))
+    r1, r2, h = map(Decimal, input().split())
+    a = list(map(Decimal, input().split()))
     
-    ans = float('inf')
-    volume = float('inf')
+    ans = Decimal('inf')
+    volume = Decimal('inf')
     
     for perm in itertools.permutations(a):
         cnt, vol = calc(perm[0], perm[1], perm[2], r1, r2, h)
-        if cnt < ans:
-            ans = cnt
-            volume = vol
-        elif cnt == ans:
-            volume = min(volume, vol)
+        ans = min(ans, cnt)
+        volume = min(volume, vol)
     
     print(ans, end=' ')
-    print("%.2f" % volume)
+    print(f"{volume:.2f}")
 
 if __name__ == "__main__":
     indef()
