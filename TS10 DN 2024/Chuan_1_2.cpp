@@ -29,39 +29,46 @@ int moveY[] = {1, -1, 0, 0};
 char moveC[] = {'R', 'L', 'D', 'U'};
 
 void indef(){
-    // #define JA "input"
-    #define JA "TRUNGTAM"
+    #define JA "input"
     if(fopen(JA ".inp", "r")){
         freopen(JA ".inp","r",stdin);
-        freopen(JA ".out","w",stdout);  
+        freopen(JA ".out","w",stdout);    
     }
 }
-int a[N];
-int pref[N];
-int n, k;
-bool check(int m){
-    for(int i=1;i<=n;i++){
-        if(a[i] >= m) pref[i] = 1;
-        else pref[i] = -1;
-        pref[i] += pref[i - 1];
+
+ii s(int n) {
+    int a = 0, b = 0;
+    while (n) {
+        a += n % 10;
+        n /= 10;
+        if (n == 0) swap(a, b);
+        b += n % 10;
+        n /= 10;
     }
-    int mx = pref[k], mn = 0;
-    for(int i=k + 1;i<=n;i++){
-        mn = min(mn, pref[i - k]);
-        mx = max(mx, pref[i] - mn);
+    return make_pair(b, a);
+}
+
+int count(int n) {
+    int ans = 0;
+    while (n != 0) {
+        ans++;
+        n /= 10;
     }
-    return mx > 0;
+    return ans;
 }
 void solve(){
-    cin >> n >> k;
-    for(int i=1;i<=n;i++) cin >> a[i];
-    int l = 1, r = 1e9;
-    while(r - l > 1){
-        int m = (l + r)/2;
-        if(check(m)) l = m;
-        else r = m;
+    int a, b, ans = 0;
+    cin >> a >> b;
+    for (int i = 1; i < 1e7; i++) {
+        pair<int, int> x = s(i);
+        int diff = x.X - x.Y;
+        diff = 1 - diff;
+        if (count(i) % 2 == 1) diff = -diff;
+        if (diff >= 0 && diff <= 9)
+            if (i * 10 + diff >= a && i * 10 + diff <= b)
+                ans++;
     }
-    cout << l << nl;
+    cout << ans;
 }
 int main(){
     fast;

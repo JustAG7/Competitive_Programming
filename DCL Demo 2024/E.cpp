@@ -20,7 +20,7 @@ using namespace std;
 
 
 const int M = 1e9+7;
-const int N = 3e5+5;
+const int N = 2e5+5;
 const ll inf = 1e18;
 const ll INF = 0x3f;
 
@@ -29,44 +29,43 @@ int moveY[] = {1, -1, 0, 0};
 char moveC[] = {'R', 'L', 'D', 'U'};
 
 void indef(){
-    // #define JA "input"
-    #define JA "TRUNGTAM"
-    if(fopen(JA ".inp", "r")){
-        freopen(JA ".inp","r",stdin);
-        freopen(JA ".out","w",stdout);  
-    }
+	#define JA "input"
+	if(fopen(JA ".inp", "r")){
+		freopen(JA ".inp","r",stdin);
+		freopen(JA ".out","w",stdout);	
+	}
 }
-int a[N];
-int pref[N];
-int n, k;
-bool check(int m){
-    for(int i=1;i<=n;i++){
-        if(a[i] >= m) pref[i] = 1;
-        else pref[i] = -1;
-        pref[i] += pref[i - 1];
-    }
-    int mx = pref[k], mn = 0;
-    for(int i=k + 1;i<=n;i++){
-        mn = min(mn, pref[i - k]);
-        mx = max(mx, pref[i] - mn);
-    }
-    return mx > 0;
-}
+int dp[N];
+string a[N];
 void solve(){
-    cin >> n >> k;
-    for(int i=1;i<=n;i++) cin >> a[i];
-    int l = 1, r = 1e9;
-    while(r - l > 1){
-        int m = (l + r)/2;
-        if(check(m)) l = m;
-        else r = m;
-    }
-    cout << l << nl;
+	int n;
+	string s;
+	cin >> n >> s;
+	int m = s.size();
+	memset(dp, 0x3f, sizeof dp);
+	dp[0] = 0;
+	set<string> st;
+	for(int i=0;i<n;i++){
+		string t;cin >> t;
+		st.insert(t);
+	}
+	for(int i=1;i<=m;i++){
+		int res = M;
+		for(int j=2;j<=min(i, 20);j++){
+			string str = s.substr(i - j, j);
+			res = min(res, dp[i - j + 1]);
+			if(i == j) res = 0;
+			if(st.find(str) != st.end()){
+				dp[i] = min(dp[i], res) + 1;
+			}
+		}
+	}
+	cout << dp[m];
 }
 int main(){
-    fast;
-    indef();
-    int tt=1;
-    // cin >> tt;
-    while(tt--) solve();
+	fast;
+	indef();
+	int tt=1;
+	// cin >> tt;
+	while(tt--) solve();
 }

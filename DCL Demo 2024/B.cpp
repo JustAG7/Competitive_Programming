@@ -29,44 +29,41 @@ int moveY[] = {1, -1, 0, 0};
 char moveC[] = {'R', 'L', 'D', 'U'};
 
 void indef(){
-    // #define JA "input"
-    #define JA "TRUNGTAM"
-    if(fopen(JA ".inp", "r")){
-        freopen(JA ".inp","r",stdin);
-        freopen(JA ".out","w",stdout);  
-    }
+	#define JA "input"
+	if(fopen(JA ".inp", "r")){
+		freopen(JA ".inp","r",stdin);
+		freopen(JA ".out","w",stdout);	
+	}
 }
-int a[N];
-int pref[N];
-int n, k;
-bool check(int m){
-    for(int i=1;i<=n;i++){
-        if(a[i] >= m) pref[i] = 1;
-        else pref[i] = -1;
-        pref[i] += pref[i - 1];
-    }
-    int mx = pref[k], mn = 0;
-    for(int i=k + 1;i<=n;i++){
-        mn = min(mn, pref[i - k]);
-        mx = max(mx, pref[i] - mn);
-    }
-    return mx > 0;
+vector<vector<int>> ans;
+vector<int> res;
+
+void add(int n, int i, vector<int> &res){
+	if(n == 0){
+		vector<int> t = res;
+		sort(rall(t));
+		ans.pb(t);
+	}
+	for(int j=n;j>=i;j--){
+		res.pb(j);
+		add(n - j, j, res);
+		res.pop_back();	
+	}
 }
 void solve(){
-    cin >> n >> k;
-    for(int i=1;i<=n;i++) cin >> a[i];
-    int l = 1, r = 1e9;
-    while(r - l > 1){
-        int m = (l + r)/2;
-        if(check(m)) l = m;
-        else r = m;
-    }
-    cout << l << nl;
+	int n;
+	cin >> n;
+	add(n, 1, res);
+	sort(rall(ans));
+	for(auto x : ans){
+		for(auto y : x) cout << y << ' ';
+			cout << nl;
+	}
 }
 int main(){
-    fast;
-    indef();
-    int tt=1;
-    // cin >> tt;
-    while(tt--) solve();
+	fast;
+	indef();
+	int tt=1;
+	// cin >> tt;
+	while(tt--) solve();
 }

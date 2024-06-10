@@ -20,7 +20,7 @@ using namespace std;
 
 
 const int M = 1e9+7;
-const int N = 3e5+5;
+const int N = 2e5+5;
 const ll inf = 1e18;
 const ll INF = 0x3f;
 
@@ -29,44 +29,46 @@ int moveY[] = {1, -1, 0, 0};
 char moveC[] = {'R', 'L', 'D', 'U'};
 
 void indef(){
-    // #define JA "input"
-    #define JA "TRUNGTAM"
-    if(fopen(JA ".inp", "r")){
-        freopen(JA ".inp","r",stdin);
-        freopen(JA ".out","w",stdout);  
-    }
+	#define JA "input"
+	if(fopen(JA ".inp", "r")){
+		freopen(JA ".inp","r",stdin);
+		freopen(JA ".out","w",stdout);	
+	}
 }
-int a[N];
-int pref[N];
-int n, k;
-bool check(int m){
-    for(int i=1;i<=n;i++){
-        if(a[i] >= m) pref[i] = 1;
-        else pref[i] = -1;
-        pref[i] += pref[i - 1];
-    }
-    int mx = pref[k], mn = 0;
-    for(int i=k + 1;i<=n;i++){
-        mn = min(mn, pref[i - k]);
-        mx = max(mx, pref[i] - mn);
-    }
-    return mx > 0;
+
+bool vis[N];
+vector<int> g[N];
+int dfs(int u){
+	int ans = 1;
+	vis[u] = 1;
+	for(auto v : g[u]){
+		if(vis[v]) continue;
+		ans += dfs(v);
+	}
+	return ans;
 }
 void solve(){
-    cin >> n >> k;
-    for(int i=1;i<=n;i++) cin >> a[i];
-    int l = 1, r = 1e9;
-    while(r - l > 1){
-        int m = (l + r)/2;
-        if(check(m)) l = m;
-        else r = m;
-    }
-    cout << l << nl;
+	int n, m;
+	cin >> n >> m;
+	for(int i=0;i<m;i++){
+		int u, v;
+		cin >> u >> v;
+		g[u].pb(v);
+		g[v].pb(u);
+	}
+	ll ans = 0;
+	for(int i=1;i<=n;i++){
+		if(!vis[i]){
+			ll cnt = dfs(i);
+			ans += cnt * (cnt - 1) / 2;
+		}
+	}
+	cout << ans - m;
 }
 int main(){
-    fast;
-    indef();
-    int tt=1;
-    // cin >> tt;
-    while(tt--) solve();
+	fast;
+	indef();
+	int tt=1;
+	// cin >> tt;
+	while(tt--) solve();
 }
