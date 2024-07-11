@@ -23,6 +23,7 @@ const int M = 1e9+7;
 const int N = 3e5+5;
 const ll inf = 1e18;
 const ll INF = 0x3f;
+const ll n6 = 166666668;
 
 int moveX[] = {0, 0, 1, -1};
 int moveY[] = {1, -1, 0, 0};
@@ -35,83 +36,146 @@ void indef(){
 		freopen(JA ".out","w",stdout);	
 	}
 }
-ll n, x, q, k;
+ll n, q;
+ll b[N];
 
-// for t = u -> v => a[t] = (t - u + 1) ^ 2 + 2(t - u + 1) * n * k + (n * k) ^ 2
+ll add(ll a, ll b){
+    return (a + b) % M;
+}
+ll sub(ll a, ll b){
+    return ((a - b) % M + M) % M;
+}
+ll mul(ll a, ll b){
+    return (a * b) % M;
+}
 struct Segtree{
+    
     int size;
-    vector<ll> st1, lazy, st2;
+    vector<pair<ll,ll>> lz;
+    vector<ll> st1, st2, t;
     void init(int n){
         size = n;
+        t.assign(4 * n + 5, 0LL);
+        lz.assign(4 * n + 5, {0, 0});
         st1.assign(4 * n + 5, 0LL);
-        lazy.assign(4 * n + 5, 0LL);
         st2.assign(4 * n + 5, 0LL);
     }
     void build(int id,int l,int r){
         if(l == r){
+            st1[id] = (b[l] * b[l]) % M;
             st2[id] = b[l];
             return;
         }
         int m = (l + r)/2;
         build(id * 2, l, m);
         build(id * 2 + 1, m + 1, r);
-        st2[id] = st2[id * 2] + st2[id * 2 + 1];
+        st2[id] = add(st2[id * 2], st2[id * 2 + 1]);
+        st1[id] = add(st[id * 2], st[id * 2 + 1]);
     }
-    void pushDown(int id){
-        st1[id * 2] += lazy[id] * st2[id * 2];
-        lazy[id * 2] += lazy[id];
-
-        st1[id * 2 + 1] += lazy[id] * st2[id * 2 + 1];
-        lazy[id * 2 + 1] += lazy[id];
-
-        lazy[id] = 0; 
+    void pushDown1(int id){
+        for(int i = id * 2; i <= id * 2 + 1; i++){
+            t[i] = add(t[i], add(mul(lz[id].X, st1[i]), sub(mul(mul(st2[i], n), mul(lz[id].X, lz[id].X - 1)), mul(mul(2, st2[i]), mul(lz[id].X, lz[id].Y)))));
+            lz[i].X = add(lz[i].X, lz[id].X);
+            lz[i].Y = add(lz[i].Y, lz[id].Y);
+        } 
+        lz[id] = {0, 0};
     }
     void pullUp(int id){
-        st1[id] = st1[id * 2] + st1[id * 2 + 1];
+        t[id] = add(t[id * 2], t[id * 2 + 1]);
     }
-    void inc(int id,int l,int r,int u,int v,ll x){
-        if(v < l || r < u) return;
+    void inc1(int id,int l,int r,int u,int v, ll k, ll L){
+        if(u > v || l > r || v < l || r < u) return;
         if(u <= l && r <= v){
-            st1[id] += x * st2[id];
-            lazy[id] += x;
+            // k * t^2 - 2 * t * k * (L - 1) + t * n * (k - 1) * k
+            t[id] = add(t[i], add(mul(lz[id].X, st1[id]), sub(mul(mul(st2[id], n), mul(lz[id].X - 1, lz[id].X)), mul(mul(2, st2[id]), mul(lz[id].X, lz[id].Y)))));
+            lz[id].X = add(lz[id].X, k);
+            lz[id].Y = add(lz[id].Y, L - 1);
             return;
         }
         int m = (l + r)/2;
-        pushDown(id);
-        inc(id * 2, l, m, u, v, x);
-        inc(id * 2 + 1, m + 1, r, u, v, x);
+        pushDown1(id);
+        inc1(id * 2, l, m, u, v, x);
+        inc1(id * 2 + 1, m + 1, r, u, v, x);
         pullUp(id);
     }
-    void inc(int l,int r, ll x){
-
-        inc(1, 1, size, l, r, x);
+    void inc1(int l,int r, ll k, ll L){
+        inc1(1, 1, size, l, r, k, L);
     }
 
-    ll get(int id,int l,int r,int u,int v){
+    ll get1(int id,int l,int r,int u,int v){
         if(v < l || r < u) return 0LL;
-        if(u <= l && r <= v) return st1[id];
+        if(u <= l && r <= v) return t[id];
         int m = (l + r)/2;
-        pushDown(id);
-        return get(id * 2, l, m, u, v) + get(id * 2 + 1, m + 1, r, u, v);
+        pushDown1(id);
+        return get1(id * 2, l, m, u, v) + get1(id * 2 + 1, m + 1, r, u, v);
     }
-    ll get(int l,int r){
-        return get(1, 1, size, l, r);
+    ll get1(int l,int r){
+        return get1(1, 1, size, l, r);
+    }
+    void pushDown2(int id){
+
+    }
+    void inc2(int id,int l,int r,int u,int v, ll k, ll L){
+        if(u > v || l > r || v < l || r < u) return;
+        if(u <= l && r <= v){
+            // k * (L - 1) ^ 2 - n * k * (k - 1) * (L - 1) + n ^ 2 + (k * (k - 1) * (2 * k - 1) * n6)
+            
+        }
+        int m = (l + r)/2;
+        pushDown2(id);
     }
 };
 
-// generally: a[i] = (i + n*k)^2 
-// And we have from u to v
-// => for t = u to v => a[t] += (t - (u - 1) + n*k)^2
-// => (t - (u - 1))^2 + 2nk * (t - u + 1) + (n * k)^2
-// => t^2 - 2t(u - 1) + (u - 1)^2 + 2nk * (t - u + 1) + (n * k)^2
-// => t^2 - 2t(u - 1) + (u - 1)^2 + (2nk * t) - (2nk * (u - 1)) + (n * k)^2
 void solve(){
-	
+	cin >> n >> q;
+    Segtree t, l;
+    t.init(n); l.init(n);
+    for(int i=1;i<=n;i++) b[i] = i;
+    t.build(1, 1, n);
+    for(int i=1;i<=n;i++) b[i] = 1;
+    l.build(1, 1, n);
+    while(q--){
+        int t; cin >> t;
+        if(t == 1){
+            ll x, m;
+            cin >> x >> m;
+            ll cnt = m/n;
+            ll remain = m % n;
+
+            if(m % n == 0){
+                int l1 = 1, r1 = n;
+                // cout << l1 << ' ' << r1 << nl;
+            }
+            else if(x + remain - 1 > n){
+                int l1 = x, r1 = n;
+                // cout << l1 << ' ' << r1 << nl;
+                int l2 = 1, r2 = remain - (r1 - l1 + 1);
+                // cout << l2 << ' ' << r2 << nl;
+                int l3 = r2 + 1, r3 = x - 1;
+                // cout << l3 << ' ' << r3 << nl;
+            }
+            else{
+                int l1 = x, r1 = x + remain - 1;
+                // cout << l1 << ' ' << r1 << nl;
+                if(cnt > 0){
+                    int l2 = r1 + 1, r2 = n;
+                    int l3 = 1, r3 = x - 1;
+                    // cout << l2 << ' ' << r2 << nl << l3 << ' ' << r3 << nl;
+                    
+                }
+            }
+            cout << nl;
+        }
+        else{
+            int i, j;
+            cin >> i >> j;   
+        }
+    }
 }
 int main(){
 	fast;
 	indef();
 	int tt=1;
-	cin >> tt;
+	// cin >> tt;
 	while(tt--) solve();
 }

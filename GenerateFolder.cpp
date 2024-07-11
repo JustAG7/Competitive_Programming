@@ -9,7 +9,7 @@ int main() {
     
     // Get the folder name from the user
     std::cout << "Enter folder name: ";
-    folderName = "DCL Qual 2024";
+    folderName = "CF957";
     // std::cin >> folderName;
 
     // Check if the folder already exists
@@ -20,7 +20,7 @@ int main() {
     }
 
     // Create the folder
-    if (mkdir(folderName.c_str(), 0777) == 0) { // 0777 for full permissions (you can change permissions as needed)
+    if (mkdir(folderName.c_str()) == 0) { // 0777 for full permissions (you can change permissions as needed)
         std::cout << "Folder created successfully." << std::endl;
 
         // Get the current working directory
