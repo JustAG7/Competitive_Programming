@@ -36,26 +36,11 @@ void indef(){
 	}
 }
 
-int n, k;
-vector<int> res;
-void gen(int pos, int num){
-	if(res.size() == k){
-		for(auto x : res) cout << x << ' ';
-		cout << nl; return;
-	}
-	if(num > n) return;
-
-	res.pb(num + 1);
-	gen(pos + 1, num + 1);
-	res.pop_back();
-	gen(pos + 1, num + 1);
-}
 void solve(){
-	cin >> n >> k;
-	for(int i=1;i<=n;i++){
-		res.clear();
-		gen(1, i);
-	}
+	int n;
+	cin >> n;
+	int up = (n/100 + 1) * 100;
+	cout << up - n;
 }
 int main(){
 	fast;

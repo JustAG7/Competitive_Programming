@@ -36,31 +36,36 @@ void indef(){
 	}
 }
 
-int n, k;
-vector<int> res;
-void gen(int pos, int num){
-	if(res.size() == k){
-		for(auto x : res) cout << x << ' ';
-		cout << nl; return;
-	}
-	if(num > n) return;
-
-	res.pb(num + 1);
-	gen(pos + 1, num + 1);
-	res.pop_back();
-	gen(pos + 1, num + 1);
-}
 void solve(){
-	cin >> n >> k;
+	int n, q;
+	string a, b;
+	cin >> n >> q;
+	cin >> a >> b;
+	vector<vector<int>> l(n + 1, vector<int> (30, 0)), r(n + 1, vector<int> (30, 0));
 	for(int i=1;i<=n;i++){
-		res.clear();
-		gen(1, i);
+		l[i][a[i - 1] - 'a' + 1]++;
+		r[i][b[i - 1] - 'a' + 1]++;
+		for(int j=1;j<=26;j++){
+			l[i][j] += l[i - 1][j];
+			r[i][j] += r[i - 1][j];
+		}
+	}
+	while(q--){
+		int u, v;
+		cin >> u >> v;
+		int cnt = 0;
+		for(int i=1;i<=26;i++){
+			int x = l[v][i] - l[u - 1][i];
+			int y = r[v][i] - r[u - 1][i];
+			cnt += abs(x - y);
+		}
+		cout << cnt/2 << nl;
 	}
 }
 int main(){
 	fast;
 	indef();
 	int tt=1;
-	// cin >> tt;
+	cin >> tt;
 	while(tt--) solve();
 }

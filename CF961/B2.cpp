@@ -36,31 +36,33 @@ void indef(){
 	}
 }
 
-int n, k;
-vector<int> res;
-void gen(int pos, int num){
-	if(res.size() == k){
-		for(auto x : res) cout << x << ' ';
-		cout << nl; return;
-	}
-	if(num > n) return;
-
-	res.pb(num + 1);
-	gen(pos + 1, num + 1);
-	res.pop_back();
-	gen(pos + 1, num + 1);
-}
 void solve(){
+	ll n, k;
 	cin >> n >> k;
-	for(int i=1;i<=n;i++){
-		res.clear();
-		gen(1, i);
+	vector<ll> a(n);
+	for(auto &x : a) cin >> x;
+	map<ll,ll> mp;
+	for(int i=0;i<n;i++){
+		ll x;cin >> x;
+		mp[a[i]] = x;
 	}
+	ll ans = 0;
+	for(auto [x, y] : mp){
+		ans = max(ans, x * min(y, k / x));
+		if(mp.count(x + 1)){
+			ll z = mp[x + 1];
+			ll tmp;
+			if(x * y >= k) tmp = k / x;
+			else tmp = y + min(z, (k - x * y) / (x + 1));
+			ans = max(ans, min(k, tmp * x + min(tmp, z)));
+		}
+	}
+	cout << ans << nl;
 }
 int main(){
 	fast;
 	indef();
 	int tt=1;
-	// cin >> tt;
+	cin >> tt;
 	while(tt--) solve();
 }
