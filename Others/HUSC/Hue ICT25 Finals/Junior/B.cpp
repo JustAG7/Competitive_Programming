@@ -37,8 +37,7 @@ void indef(){
 		freopen(JA ".out","w",stdout);	
 	}
 }
-// 6, 28, 496, 8128
-vector<int> res = {6, 28, 496, 8128, 33550336};
+vector<ll> res = {6, 28, 496, 8128, 33550336, 8589869056, 137438691328};
 
 ll a[N];
 void solve(int id){
@@ -49,7 +48,7 @@ void solve(int id){
 	ll ans = 0;
 	for(auto k : res) {
 		if(k > w) break;
-		map<ll, ll> mp;
+		map<ll, int> mp;
 		ll sum = 0;
 		mp[0]++;
 		for(int i = 1; i <= n; i++) {

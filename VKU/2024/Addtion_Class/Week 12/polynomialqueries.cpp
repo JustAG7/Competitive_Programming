@@ -66,7 +66,7 @@ struct Segtree{
 		lazy[id] = 0; 
 	}
 	void pullUp(int id){
-		st1[id] = st1[id * 2] + st1[id * 2 + 1];
+		st1[id] = max(st1[id * 2], st1[id * 2 + 1]);
 	}
 	void inc(int id,int l,int r,int u,int v,ll x){
 		if(v < l || r < u) return;
@@ -90,7 +90,7 @@ struct Segtree{
 		if(u <= l && r <= v) return st1[id];
 		int m = (l + r)/2;
 		pushDown(id);
-		return get(id * 2, l, m, u, v) + get(id * 2 + 1, m + 1, r, u, v);
+		return max(get(id * 2, l, m, u, v), get(id * 2 + 1, m + 1, r, u, v));
 	}
 	ll get(int l,int r){
 		return get(1, 1, size, l, r);

@@ -3,4 +3,9 @@
 *.txt
 *.inp
 *.out
+.exe
 Teaching
+.vscode
+GenFolder.cpp
+defaultcode.cpp
+defaultcodePython.py
